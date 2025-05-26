@@ -309,10 +309,13 @@ model_recommendations('Galaxy A13')
 Pendekatan Collaborative Filtering memanfaatkan data interaksi pengguna dengan item, seperti rating yang diberikan pengguna terhadap ponsel. Metode ini tidak bergantung pada fitur produk, melainkan mencari pola kesamaan preferensi antar pengguna atau antar item berdasarkan data interaksi. Pada proyek ini, digunakan model neural network dengan arsitektur embedding untuk mempelajari representasi laten pengguna dan item. Model dilatih dengan loss function Binary Crossentropy dan optimizer Adam, serta dimonitor menggunakan metrik Root Mean Squared Error (RMSE).
 
 **Parameter dan teknik utama pada CF**:
+
 1. Model Neural Network dengan Embedding
    Dibangun menggunakan kelas RecommenderNet berbasis Keras Model.
-   a) Embedding layer untuk user dan item dengan dimensi embedding 50.
-   b) Output layer memprediksi rating menggunakan sigmoid activation.
+   
+   - Embedding layer untuk user dan item dengan dimensi embedding 50.
+   - Output layer memprediksi rating menggunakan sigmoid activation.
+     
 2. Loss Function: Binary Crossentropy
    Meminimalkan perbedaan prediksi rating dengan rating asli.
 3. Optimizer: Adam dengan learning rate 0.001
@@ -321,6 +324,7 @@ Pendekatan Collaborative Filtering memanfaatkan data interaksi pengguna dengan i
    Sebagai metrik untuk memantau performa model.
 
 **Tahapan proses CF**:
+
 1. Persiapan Data
    Menggunakan dataframe rating yang berisi user_id, cellphone_id, dan rating.
 2. Membangun Model
@@ -331,9 +335,11 @@ Pendekatan Collaborative Filtering memanfaatkan data interaksi pengguna dengan i
    Menggunakan model terlatih untuk memprediksi rating ponsel yang belum diulas oleh pengguna.
 
 **Cara kerja algoritma CF**:
+
 Model mempelajari pola rating antar pengguna dan item, sehingga dapat memprediksi rating untuk item baru bagi pengguna tertentu. Ini memungkinkan rekomendasi produk yang sesuai dengan preferensi pengguna meskipun produk tersebut tidak mirip secara fitur dengan yang sudah pernah dipilih.
 
 **Contoh Interaksi**:
+
 Misalnya, pengguna dengan ID 106 ingin rekomendasi:
 1. Model mencari pengguna lain dengan pola rating serupa.
 2. Memperkirakan rating pengguna 106 terhadap ponsel yang belum diulas.
