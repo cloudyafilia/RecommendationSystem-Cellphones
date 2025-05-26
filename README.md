@@ -72,7 +72,7 @@ Dataset yang digunakan adalah dataset [Cellphones Recommendations](https://www.k
       - `cellphone_id`: ID unik untuk setiap ponsel (mengacu pada cellphones_data).
       - `rating`: Nilai rating yang diberikan pengguna untuk ponsel tertentu (skala 1-10).
 
-3. **Cellphones User**s: 99 baris dengan 4 kolom, berisi data demografi pengguna yang dapat dijelaskan sebagai berikut.
+3. **Cellphones Users**: 99 baris dengan 4 kolom, berisi data demografi pengguna yang dapat dijelaskan sebagai berikut.
 
     | index | user_id | age | gender | occupation       |
     |-------|---------|-----|--------|------------------|
@@ -216,20 +216,21 @@ Analisis eksploratif dilakukan untuk memahami distribusi data dan hubungan antar
     Dataset dibagi menjadi dua bagian: data training sebanyak 80% dan data testing sebanyak 20% untuk melatih model dan menguji performanya secara adil dan valid.
 
 ### Proses Data Preparation
-    1. Menggabungkan dataset cellphones data, cellphones rating, dan cellphones users menjadi satu dataframe komprehensif.
-    2. Menghapus semua baris yang memiliki nilai null pada kolom occupation untuk menjaga kualitas data pengguna.
-    3. Menghapus baris yang mengandung nilai outlier, seperti rating yang bernilai 18 (di luar skala penilaian yang valid) dan nilai gender '-Select Gender-' yang merupakan placeholder, bukan data valid.
-    4. Menstandardisasi nilai pada kolom occupation dengan mengubah seluruh teks menjadi lowercase agar nilai-nilai yang serupa tidak terduplikasi karena perbedaan kapitalisasi.
-    5. Memperbaiki kesalahan penulisan dalam kolom occupation seperti mengubah 'Healthare' menjadi 'healthcare' dan mengganti singkatan 'it' menjadi 'information technology'.
-    6. Melakukan pembagian data menjadi data train sebanyak 791 baris (80%) dan data test sebanyak 198 baris (20%).
+
+1. Menggabungkan dataset cellphones data, cellphones rating, dan cellphones users menjadi satu dataframe komprehensif.
+2. Menghapus semua baris yang memiliki nilai null pada kolom occupation untuk menjaga kualitas data pengguna.
+3. Menghapus baris yang mengandung nilai outlier, seperti rating yang bernilai 18 (di luar skala penilaian yang valid) dan nilai gender '-Select Gender-' yang merupakan placeholder, bukan data valid.
+4. Menstandardisasi nilai pada kolom occupation dengan mengubah seluruh teks menjadi lowercase agar nilai-nilai yang serupa tidak terduplikasi karena perbedaan kapitalisasi.
+5. Memperbaiki kesalahan penulisan dalam kolom occupation seperti mengubah 'Healthare' menjadi 'healthcare' dan mengganti singkatan 'it' menjadi 'information technology'.
+6. Melakukan pembagian data menjadi data train sebanyak 791 baris (80%) dan data test sebanyak 198 baris (20%).
 
 ### Alasan Melakukan Data Preparation
 
-    1. Handling Missing Values: Nilai yang hilang dapat menyebabkan bias atau error dalam analisis dan model, sehingga perlu diatasi agar data yang digunakan lengkap dan konsisten.
-    2. Removing Outliers: Data ekstrim atau tidak valid dapat merusak akurasi model dan menghasilkan prediksi yang tidak realistis, sehingga penghapusan outlier membantu meningkatkan performa dan kestabilan model.
-    3. Mengubah Format Penulisan: Konsistensi penulisan data kategorikal penting agar nilai yang sama tidak terpisah menjadi kategori berbeda, yang dapat memengaruhi analisis dan hasil pemodelan.
-    4. Mereplace Value yang Salah: Memperbaiki kesalahan penulisan mencegah duplikasi kategori dan memastikan interpretasi data yang benar dan valid.
-    5. Pembagian Dataset: Memisahkan data untuk pelatihan dan pengujian memungkinkan evaluasi model secara objektif terhadap data yang belum pernah dilihat, sehingga mengukur kemampuan generalisasi model.
+1. Handling Missing Values: Nilai yang hilang dapat menyebabkan bias atau error dalam analisis dan model, sehingga perlu diatasi agar data yang digunakan lengkap dan konsisten.
+2. Removing Outliers: Data ekstrim atau tidak valid dapat merusak akurasi model dan menghasilkan prediksi yang tidak realistis, sehingga penghapusan outlier membantu meningkatkan performa dan kestabilan model.
+3. Mengubah Format Penulisan: Konsistensi penulisan data kategorikal penting agar nilai yang sama tidak terpisah menjadi kategori berbeda, yang dapat memengaruhi analisis dan hasil pemodelan.
+4. Mereplace Value yang Salah: Memperbaiki kesalahan penulisan mencegah duplikasi kategori dan memastikan interpretasi data yang benar dan valid.
+5. Pembagian Dataset: Memisahkan data untuk pelatihan dan pengujian memungkinkan evaluasi model secara objektif terhadap data yang belum pernah dilihat, sehingga mengukur kemampuan generalisasi model.
 
 ### Hasil Splitting Data
 
@@ -247,14 +248,14 @@ Pada tahap ini, dua pendekatan utama yang digunakan untuk membangun sistem rekom
 Content-Based Filtering berfokus pada atribut atau fitur dari item itu sendiri, dalam hal ini fitur ponsel seperti merek (brand), model, dan sistem operasi. Metode ini membangun profil item dengan mengubah data teks menjadi representasi numerik menggunakan teknik TF-IDF Vectorizer, yang mengukur pentingnya sebuah kata atau fitur dalam konteks data. Setelah itu, dilakukan perhitungan cosine similarity antar item untuk menentukan tingkat kemiripan setiap ponsel dengan ponsel yang sudah disukai pengguna. Hasilnya adalah daftar rekomendasi ponsel yang paling mirip dengan ponsel yang telah digunakan atau disukai oleh pengguna.
 
 -  **Parameter dan teknik utama pada CBF**:
-    1. TF-IDF Vectorizer: Digunakan untuk mengubah data teks (misalnya kolom brand) menjadi representasi numerik dalam bentuk matriks sparse, di mana setiap fitur diberi bobot berdasarkan frekuensi dan pentingnya dalam data. Ini memungkinkan penghitungan kesamaan antar item.
-    2. Cosine Similarity: Metode yang digunakan untuk mengukur kemiripan antar vektor fitur. Nilai cosine similarity berkisar antara 0 sampai 1, di mana 1 berarti dua item sangat mirip.
+1. TF-IDF Vectorizer: Digunakan untuk mengubah data teks (misalnya kolom brand) menjadi representasi numerik dalam bentuk matriks sparse, di mana setiap fitur diberi bobot berdasarkan frekuensi dan pentingnya dalam data. Ini memungkinkan penghitungan kesamaan antar item.
+2. Cosine Similarity: Metode yang digunakan untuk mengukur kemiripan antar vektor fitur. Nilai cosine similarity berkisar antara 0 sampai 1, di mana 1 berarti dua item sangat mirip.
 
 - **Tahapan proses CBF**:
-    1. Pemilihan Pemilihan Fitur
-       Karena TF-IDF bekerja optimal pada data teks, hanya kolom bertipe object seperti brand, model, dan operating_system yang dipilih.
-    2. Pembuatan DataFrame
-       Membuat DataFrame baru yang berisi kolom-kolom tersebut untuk diproses.
+1. Pemilihan Pemilihan Fitur
+   Karena TF-IDF bekerja optimal pada data teks, hanya kolom bertipe object seperti brand, model, dan operating_system yang dipilih.
+2. Pembuatan DataFrame
+   Membuat DataFrame baru yang berisi kolom-kolom tersebut untuk diproses.
        
        ```python
        phone_new = pd.DataFrame({
@@ -264,29 +265,32 @@ Content-Based Filtering berfokus pada atribut atau fitur dari item itu sendiri, 
         'operating_system': operating_system,
         })
        ```
-       
-    4.  Transformasi Data dengan TF-IDF
-        Membangun TF-IDF matrix dari kolom brand (atau fitur lain yang relevan):
+   
+3. Transformasi Data dengan TF-IDF
+   Membangun TF-IDF matrix dari kolom brand (atau fitur lain yang relevan):
         
         ```python
         tfidf_matrix = tf.fit_transform(phone_new['brand'])
         ```
         
-        Output berupa matriks ukuran (33,10) yaitu `jumlah_data` dan `jumlah_unique_brand`.
-    6.  Menghitung Kemiripan
-        Menggunakan cosine similarity untuk menghitung derajat kemiripan antar ponsel berdasarkan matriks TF-IDF tersebut.
-    7. Evaluasi dan membangun Fungsi Rekomendasi
-       Membuat fungsi yang menerima nama model ponsel dan mengembalikan 4 rekomendasi teratas yang paling mirip, beserta detail brand dan operating system.
+   Output berupa matriks ukuran (33,10) yaitu `jumlah_data` dan `jumlah_unique_brand`.
+
+4.  Menghitung Kemiripan
+    Menggunakan cosine similarity untuk menghitung derajat kemiripan antar ponsel berdasarkan matriks TF-IDF tersebut.
+5.  Evaluasi dan membangun Fungsi Rekomendasi
+    Membuat fungsi yang menerima nama model ponsel dan mengembalikan 4 rekomendasi teratas yang paling mirip, beserta detail brand dan operating system.
 
 - **Cara kerja algoritma CBF**:
-    Algoritma CBF mengubah fitur deskriptif setiap ponsel menjadi representasi numerik yang memudahkan penghitungan kemiripan antar produk. Saat pengguna memasukkan nama model ponsel, sistem menghitung kemiripan cosine antara ponsel tersebut dengan semua ponsel lain di dataset, kemudian merekomendasikan produk yang memiliki similarity tertinggi.
+
+Algoritma CBF mengubah fitur deskriptif setiap ponsel menjadi representasi numerik yang memudahkan penghitungan kemiripan antar produk. Saat pengguna memasukkan nama model ponsel, sistem menghitung kemiripan cosine antara ponsel tersebut dengan semua ponsel lain di dataset, kemudian merekomendasikan produk yang memiliki similarity tertinggi.
 
 - **Contoh Interaksi**:
-    Jika pengguna memilih ponsel "Galaxy A13", algoritma akan:
-    1. Mengambil profil teks "Galaxy A1".
-    2. Mengubah profil tersebut ke dalam vektor TF-IDF.
-    3. Menghitung cosine similarity dengan seluruh ponsel lain.
-    4. Mengembalikan daftar ponsel dengan similarity tertinggi seperti "Galaxy Z Flip 3", "Galaxy S22 Plus", dan lain-lain.
+
+Jika pengguna memilih ponsel "Galaxy A13", algoritma akan:
+1. Mengambil profil teks "Galaxy A13".
+2. Mengubah profil tersebut ke dalam vektor TF-IDF.
+3. Menghitung cosine similarity dengan seluruh ponsel lain.
+4. Mengembalikan daftar ponsel dengan similarity tertinggi seperti "Galaxy Z Flip 3", "Galaxy S22 Plus", dan lain-lain.
 
 - **Contoh Output Top-N Recommendation untuk CBF**:
 
@@ -303,38 +307,41 @@ Content-Based Filtering berfokus pada atribut atau fitur dari item itu sendiri, 
 
 
 ### Collaborative Filtering (CF)
-    Pendekatan Collaborative Filtering memanfaatkan data interaksi pengguna dengan item, seperti rating yang diberikan pengguna terhadap ponsel. Metode ini tidak bergantung pada fitur produk, melainkan mencari pola kesamaan preferensi antar pengguna atau antar item berdasarkan data interaksi. Pada proyek ini, digunakan model neural network dengan arsitektur embedding untuk mempelajari representasi laten pengguna dan item. Model dilatih dengan loss function Binary Crossentropy dan optimizer Adam, serta dimonitor menggunakan metrik Root Mean Squared Error (RMSE).
+
+Pendekatan Collaborative Filtering memanfaatkan data interaksi pengguna dengan item, seperti rating yang diberikan pengguna terhadap ponsel. Metode ini tidak bergantung pada fitur produk, melainkan mencari pola kesamaan preferensi antar pengguna atau antar item berdasarkan data interaksi. Pada proyek ini, digunakan model neural network dengan arsitektur embedding untuk mempelajari representasi laten pengguna dan item. Model dilatih dengan loss function Binary Crossentropy dan optimizer Adam, serta dimonitor menggunakan metrik Root Mean Squared Error (RMSE).
 
 - **Parameter dan teknik utama pada CF**:
-    1. Model Neural Network dengan Embedding
-       Dibangun menggunakan kelas RecommenderNet berbasis Keras Model.
-        a) Embedding layer untuk user dan item dengan dimensi embedding 50.
-        b) Output layer memprediksi rating menggunakan sigmoid activation.
-    2. Loss Function: Binary Crossentropy
-       Meminimalkan perbedaan prediksi rating dengan rating asli.
-    3. Optimizer: Adam dengan learning rate 0.001
-       Optimasi parameter model selama training.
-    4. Metrics: Root Mean Squared Error (RMSE)
-       Sebagai metrik untuk memantau performa model.
+1. Model Neural Network dengan Embedding
+   Dibangun menggunakan kelas RecommenderNet berbasis Keras Model.
+   a) Embedding layer untuk user dan item dengan dimensi embedding 50.
+   b) Output layer memprediksi rating menggunakan sigmoid activation.
+2. Loss Function: Binary Crossentropy
+   Meminimalkan perbedaan prediksi rating dengan rating asli.
+3. Optimizer: Adam dengan learning rate 0.001
+   Optimasi parameter model selama training.
+4. Metrics: Root Mean Squared Error (RMSE)
+   Sebagai metrik untuk memantau performa model.
 
 - **Tahapan proses CF**:
-    1. Persiapan Data
-       Menggunakan dataframe rating yang berisi user_id, cellphone_id, dan rating.
-    2. Membangun Model
-       Membuat kelas model dengan embedding untuk user dan item.
-    3. Training Model
-       Melatih model dengan batch size 8 selama 100 epoch.
-    4. Evaluasi dan Prediksi
-       Menggunakan model terlatih untuk memprediksi rating ponsel yang belum diulas oleh pengguna.
+1. Persiapan Data
+   Menggunakan dataframe rating yang berisi user_id, cellphone_id, dan rating.
+2. Membangun Model
+   Membuat kelas model dengan embedding untuk user dan item.
+3. Training Model
+   Melatih model dengan batch size 8 selama 100 epoch.
+4. Evaluasi dan Prediksi
+   Menggunakan model terlatih untuk memprediksi rating ponsel yang belum diulas oleh pengguna.
 
 - **Cara kerja algoritma CF**:
-    Model mempelajari pola rating antar pengguna dan item, sehingga dapat memprediksi rating untuk item baru bagi pengguna tertentu. Ini memungkinkan rekomendasi produk yang sesuai dengan preferensi pengguna meskipun produk tersebut tidak mirip secara fitur dengan yang sudah pernah dipilih.
+
+Model mempelajari pola rating antar pengguna dan item, sehingga dapat memprediksi rating untuk item baru bagi pengguna tertentu. Ini memungkinkan rekomendasi produk yang sesuai dengan preferensi pengguna meskipun produk tersebut tidak mirip secara fitur dengan yang sudah pernah dipilih.
 
 - **Contoh Interaksi**:
-    Misalnya, pengguna dengan ID 106 ingin rekomendasi:
-    1. Model mencari pengguna lain dengan pola rating serupa.
-    2. Memperkirakan rating pengguna 106 terhadap ponsel yang belum diulas.
-    3. Mengembalikan daftar ponsel dengan prediksi rating tertinggi sebagai rekomendasi. 
+
+Misalnya, pengguna dengan ID 106 ingin rekomendasi:
+1. Model mencari pengguna lain dengan pola rating serupa.
+2. Memperkirakan rating pengguna 106 terhadap ponsel yang belum diulas.
+3. Mengembalikan daftar ponsel dengan prediksi rating tertinggi sebagai rekomendasi. 
 
 - **Contoh Output Top-N Recommendation untuk CBF**:
 
@@ -342,94 +349,92 @@ Content-Based Filtering berfokus pada atribut atau fitur dari item itu sendiri, 
   
 
 ### Perbandingan masing-masing pendekatan:
-    Kedua pendekatan menghasilkan rekomendasi dalam bentuk Top-N rekomendasi, yaitu daftar N ponsel terbaik yang dipersonalisasi untuk setiap pengguna berdasarkan metode masing-masing. Output ini membantu pengguna dalam memilih ponsel yang sesuai dengan preferensi atau menemukan ponsel pengganti yang serupa dengan ponsel lamanya. Dengan menggabungkan kelebihan kedua metode ini, diharapkan sistem rekomendasi dapat memberikan hasil yang lebih robust, fleksibel, dan relevan bagi pengguna dalam berbagai situasi.
-  
 
-    | Pendekatan             | Kelebihan                                                                                   | Kekurangan                               |
-    |-----------------------|---------------------------------------------------------------------------------------------|-----------------------------------------|
-    | Content-Based Filtering | - Independen dari data pengguna lain<br>- Dapat merekomendasikan produk baru yang belum pernah diulas | - Terbatas hanya pada fitur yang ada<br>- Risiko overfitting pada fitur tertentu |
-    | Collaborative Filtering | - Memanfaatkan pola interaksi pengguna untuk rekomendasi yang lebih personal<br>- Dapat menangani data dalam jumlah besar dan menemukan pola kompleks | - Mengalami masalah cold start untuk pengguna atau item baru<br>- Membutuhkan data interaksi yang cukup banyak |
+Kedua pendekatan menghasilkan rekomendasi dalam bentuk Top-N rekomendasi, yaitu daftar N ponsel terbaik yang dipersonalisasi untuk setiap pengguna berdasarkan metode masing-masing. Output ini membantu pengguna dalam memilih ponsel yang sesuai dengan preferensi atau menemukan ponsel pengganti yang serupa dengan ponsel lamanya. Dengan menggabungkan kelebihan kedua metode ini, diharapkan sistem rekomendasi dapat memberikan hasil yang lebih robust, fleksibel, dan relevan bagi pengguna dalam berbagai situasi.
+
+
+| Pendekatan             | Kelebihan                                                                                   | Kekurangan                               |
+|-----------------------|---------------------------------------------------------------------------------------------|-----------------------------------------|
+| Content-Based Filtering | - Independen dari data pengguna lain<br>- Dapat merekomendasikan produk baru yang belum pernah diulas | - Terbatas hanya pada fitur yang ada<br>- Risiko overfitting pada fitur tertentu |
+| Collaborative Filtering | - Memanfaatkan pola interaksi pengguna untuk rekomendasi yang lebih personal<br>- Dapat menangani data dalam jumlah besar dan menemukan pola kompleks | - Mengalami masalah cold start untuk pengguna atau item baru<br>- Membutuhkan data interaksi yang cukup banyak |
 
 ## Evaluation
 
-    Bagian ini membahas evaluasi performa kedua model sistem rekomendasi yang telah dikembangkan, yaitu Content-Based Filtering (CBF) dan Collaborative Filtering (CF). Masing-masing menggunakan metrik evaluasi yang sesuai dengan karakteristik dan data yang dipakai.
+Bagian ini membahas evaluasi performa kedua model sistem rekomendasi yang telah dikembangkan, yaitu Content-Based Filtering (CBF) dan Collaborative Filtering (CF). Masing-masing menggunakan metrik evaluasi yang sesuai dengan karakteristik dan data yang dipakai.
 
 ### Evaluation Content-Based Filtering (CBF)
 
-    Content-Based Filtering menggunakan metrik evaluasi berbasis relevansi rekomendasi, seperti Precision@N, Recall@N, dan F1@N, karena model ini merekomendasikan item berdasarkan kemiripan fitur produk tanpa memprediksi nilai numerik.
+Content-Based Filtering menggunakan metrik evaluasi berbasis relevansi rekomendasi, seperti Precision@N, Recall@N, dan F1@N, karena model ini merekomendasikan item berdasarkan kemiripan fitur produk tanpa memprediksi nilai numerik.
 
-    1. Precision@N mengukur proporsi rekomendasi dalam top-N yang benar-benar relevan dengan preferensi pengguna.
+1. Precision@N mengukur proporsi rekomendasi dalam top-N yang benar-benar relevan dengan preferensi pengguna.
 
-    $$
-    \[
-    Precision@N = \frac{\text{Jumlah item relevan dalam rekomendasi top-N}}{N}
-    \]
-    $$
+$$
+Precision@N = \frac{\text{Jumlah item relevan dalam rekomendasi top-N}}{N}
+$$
+
     
-    2. Recall@N mengukur proporsi item relevan yang berhasil ditemukan dalam top-N rekomendasi.
+2. Recall@N mengukur proporsi item relevan yang berhasil ditemukan dalam top-N rekomendasi.
 
-    $$
-    \[
-    Recall@N = \frac{\text{Jumlah item relevan dalam rekomendasi top-N}}{\text{Jumlah total item relevan}}
-    \]
-    $$
+$$
+Recall@N = \frac{\text{Jumlah item relevan dalam rekomendasi top-N}}{\text{Jumlah total item relevan}}
+$$
     
-    3. F1@N adalah harmonic mean dari precision dan recall, menggabungkan kedua aspek tersebut menjadi satu nilai evaluasi.
+3. F1@N adalah harmonic mean dari precision dan recall, menggabungkan kedua aspek tersebut menjadi satu nilai evaluasi.
 
-    $$
-    \[
-    F1@N = 2 \times \frac{Precision@N \times Recall@N}{Precision@N + Recall@N}
-    \]
-    $$
+$$
+F1@N = 2 \times \frac{Precision@N \times Recall@N}{Precision@N + Recall@N}
+$$
 
 **Hasil Evaluasi Model**:
-    Model Content-Based Filtering menunjukkan performa sempurna dengan nilai Precision@5, Recall@5, dan F1@5 sebesar 1.00. Hal ini menandakan bahwa semua rekomendasi dalam daftar top-5 benar-benar relevan dengan preferensi pengguna, serta seluruh item relevan berhasil tertangkap oleh sistem. Dengan kata lain, sistem mampu memberikan rekomendasi yang sangat akurat dan lengkap berdasarkan fitur produk.
+
+Model Content-Based Filtering menunjukkan performa sempurna dengan nilai Precision@5, Recall@5, dan F1@5 sebesar 1.00. Hal ini menandakan bahwa semua rekomendasi dalam daftar top-5 benar-benar relevan dengan preferensi pengguna, serta seluruh item relevan berhasil tertangkap oleh sistem. Dengan kata lain, sistem mampu memberikan rekomendasi yang sangat akurat dan lengkap berdasarkan fitur produk.
 
 ### Evaluation Collaborative Filtering (CF)
-    Collaborative Filtering menggunakan metrik evaluasi numerik seperti Root Mean Squared Error (RMSE) untuk mengukur perbedaan antara rating prediksi dengan rating aktual dari pengguna. Metrik ini sesuai karena CF memprediksi nilai rating yang bersifat kontinu.
 
-    Root Mean Squared Error (RMSE) memberikan ukuran rata-rata deviasi kuadrat prediksi model terhadap rating aktual.
+Collaborative Filtering menggunakan metrik evaluasi numerik seperti Root Mean Squared Error (RMSE) untuk mengukur perbedaan antara rating prediksi dengan rating aktual dari pengguna. Metrik ini sesuai karena CF memprediksi nilai rating yang bersifat kontinu.
 
-    $$
-    \[
-    RMSE = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}
-    \]
-    $$
+Root Mean Squared Error (RMSE) memberikan ukuran rata-rata deviasi kuadrat prediksi model terhadap rating aktual.
+
+$$
+RMSE = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}
+$$
     
-    di mana:  
-    - $\( y_i \)$ adalah nilai aktual,  
-    - $\( \hat{y}_i \)$ adalah nilai prediksi,  
-    - $\( n \)$ adalah jumlah data.
+di mana:  
+- $\( y_i \)$ adalah nilai aktual,  
+- $\( \hat{y}_i \)$ adalah nilai prediksi,  
+- $\( n \)$ adalah jumlah data.
 
 **Hasil Evaluasi Model**:
-    ![image](https://github.com/user-attachments/assets/ed83a841-f671-45f5-8b14-be790bebcec5)
 
-    | Dataset       | RMSE  |
-    |---------------|-------|
-    | Data Train    | 0.0126|
-    | Data Test     | 0.3110|
+![image](https://github.com/user-attachments/assets/ed83a841-f671-45f5-8b14-be790bebcec5)
 
-    Grafik model metrics menunjukkan bahwa nilai root mean squared error (RMSE) pada data training menurun drastis hingga mencapai sekitar 0.013, menandakan model berhasil belajar dengan sangat baik pada data pelatihan. Namun, nilai RMSE pada data testing stabil di angka sekitar 0.31 dan cenderung meningkat sedikit setelah epoch ke-10, yang mengindikasikan adanya overfitting, di mana model terlalu menyesuaikan diri dengan data training sehingga kehilangan kemampuan generalisasi terhadap data baru. Meski demikian, nilai RMSE test sebesar 0.3110 masih tergolong rendah, menunjukkan bahwa model tetap mampu memberikan prediksi yang cukup akurat pada data testing meskipun performanya tidak sebaik pada data training.
+
+| Dataset       | RMSE  |
+|---------------|-------|
+| Data Train    | 0.0126|
+| Data Test     | 0.3110|
+
+Grafik model metrics menunjukkan bahwa nilai root mean squared error (RMSE) pada data training menurun drastis hingga mencapai sekitar 0.013, menandakan model berhasil belajar dengan sangat baik pada data pelatihan. Namun, nilai RMSE pada data testing stabil di angka sekitar 0.31 dan cenderung meningkat sedikit setelah epoch ke-10, yang mengindikasikan adanya overfitting, di mana model terlalu menyesuaikan diri dengan data training sehingga kehilangan kemampuan generalisasi terhadap data baru. Meski demikian, nilai RMSE test sebesar 0.3110 masih tergolong rendah, menunjukkan bahwa model tetap mampu memberikan prediksi yang cukup akurat pada data testing meskipun performanya tidak sebaik pada data training.
 
 ### Evaluation terhadap Business Understanding
 
-    1. **Menjawab Problem Statement**
-         Model sistem rekomendasi yang dikembangkan berhasil menjawab problem statement utama proyek ini. Pendekatan Content-Based Filtering mampu memberikan rekomendasi ponsel yang relevan berdasarkan kemiripan fitur produk, seperti model, brand, dan sistem operasi, sehingga memudahkan pengguna dalam menemukan ponsel yang mirip dengan ponsel lama mereka. Di sisi lain, pendekatan Collaborative Filtering memanfaatkan data interaksi pengguna berupa rating untuk menemukan pola preferensi tersembunyi antar pengguna. Dengan demikian, model dapat memprediksi rating ponsel yang belum diulas oleh pengguna dan memberikan rekomendasi yang lebih personal sesuai dengan selera dan kebiasaan pengguna. Kedua metode ini secara komplementer menangani tantangan utama dalam membantu pengguna memilih ponsel yang paling sesuai dengan kebutuhan dan preferensi mereka.
+1. **Menjawab Problem Statement**
+Model sistem rekomendasi yang dikembangkan berhasil menjawab problem statement utama proyek ini. Pendekatan Content-Based Filtering mampu memberikan rekomendasi ponsel yang relevan berdasarkan kemiripan fitur produk, seperti model, brand, dan sistem operasi, sehingga memudahkan pengguna dalam menemukan ponsel yang mirip dengan ponsel lama mereka. Di sisi lain, pendekatan Collaborative Filtering memanfaatkan data interaksi pengguna berupa rating untuk menemukan pola preferensi tersembunyi antar pengguna. Dengan demikian, model dapat memprediksi rating ponsel yang belum diulas oleh pengguna dan memberikan rekomendasi yang lebih personal sesuai dengan selera dan kebiasaan pengguna. Kedua metode ini secara komplementer menangani tantangan utama dalam membantu pengguna memilih ponsel yang paling sesuai dengan kebutuhan dan preferensi mereka.
     
-    2. **Mencapai Goals**
-         Model Content-Based Filtering menggunakan teknik cosine similarity yang mengukur kesamaan antara produk berdasarkan fitur deskriptifnya, sehingga mampu menyajikan rekomendasi ponsel yang mirip secara objektif dan terstruktur. Pendekatan ini berhasil mengakomodasi pengguna baru atau pengguna yang memiliki sedikit data interaksi karena fokusnya pada fitur produk. Sementara itu, model Collaborative Filtering yang menggunakan arsitektur neural network RecommenderNet dengan embedding layer berhasil mengidentifikasi pola rating dan preferensi pengguna secara lebih dinamis dan personal. Kedua pendekatan ini berhasil mencapai tujuan utama proyek, yaitu memberikan rekomendasi ponsel yang relevan dan personalisasi, serta meningkatkan pengalaman pengguna dalam proses pencarian produk.
+2. **Mencapai Goals**
+Model Content-Based Filtering menggunakan teknik cosine similarity yang mengukur kesamaan antara produk berdasarkan fitur deskriptifnya, sehingga mampu menyajikan rekomendasi ponsel yang mirip secara objektif dan terstruktur. Pendekatan ini berhasil mengakomodasi pengguna baru atau pengguna yang memiliki sedikit data interaksi karena fokusnya pada fitur produk. Sementara itu, model Collaborative Filtering yang menggunakan arsitektur neural network RecommenderNet dengan embedding layer berhasil mengidentifikasi pola rating dan preferensi pengguna secara lebih dinamis dan personal. Kedua pendekatan ini berhasil mencapai tujuan utama proyek, yaitu memberikan rekomendasi ponsel yang relevan dan personalisasi, serta meningkatkan pengalaman pengguna dalam proses pencarian produk.
     
-    3. **Dampak dari Solution Statement**
-        Implementasi kombinasi algoritma Content-Based dan Collaborative Filtering memberikan dampak positif yang signifikan terhadap kualitas rekomendasi. Content-Based Filtering memastikan bahwa rekomendasi yang diberikan secara langsung berhubungan dengan fitur-fitur utama ponsel yang sudah dikenal oleh pengguna, sehingga memberikan rasa kepercayaan dan kemudahan dalam memilih pengganti atau model serupa. Di sisi lain, Collaborative Filtering memperkaya rekomendasi dengan analisis pola interaksi dari banyak pengguna, memungkinkan sistem memahami preferensi yang tidak selalu terlihat dari fitur produk saja, seperti tren populer atau kecenderungan spesifik kelompok pengguna tertentu. Penggunaan teknik evaluasi seperti RMSE untuk Collaborative Filtering dan metrik Precision, Recall, serta F1-score untuk Content-Based Filtering juga menunjukkan pendekatan yang matang dalam memastikan performa model. Hasilnya adalah sistem rekomendasi yang adaptif, akurat, dan personal, yang secara langsung mendukung tujuan proyek dalam membantu pengguna menemukan ponsel yang sesuai dengan preferensi mereka dan mempercepat pengambilan keputusan pembelian.
+3. **Dampak dari Solution Statement**
+Implementasi kombinasi algoritma Content-Based dan Collaborative Filtering memberikan dampak positif yang signifikan terhadap kualitas rekomendasi. Content-Based Filtering memastikan bahwa rekomendasi yang diberikan secara langsung berhubungan dengan fitur-fitur utama ponsel yang sudah dikenal oleh pengguna, sehingga memberikan rasa kepercayaan dan kemudahan dalam memilih pengganti atau model serupa. Di sisi lain, Collaborative Filtering memperkaya rekomendasi dengan analisis pola interaksi dari banyak pengguna, memungkinkan sistem memahami preferensi yang tidak selalu terlihat dari fitur produk saja, seperti tren populer atau kecenderungan spesifik kelompok pengguna tertentu. Penggunaan teknik evaluasi seperti RMSE untuk Collaborative Filtering dan metrik Precision, Recall, serta F1-score untuk Content-Based Filtering juga menunjukkan pendekatan yang matang dalam memastikan performa model. Hasilnya adalah sistem rekomendasi yang adaptif, akurat, dan personal, yang secara langsung mendukung tujuan proyek dalam membantu pengguna menemukan ponsel yang sesuai dengan preferensi mereka dan mempercepat pengambilan keputusan pembelian.
 
 
 ## Conclusion
 
-    Dengan menggabungkan dua pendekatan utama, yaitu Content-Based Filtering dan Collaborative Filtering, sistem rekomendasi yang dibangun menjadi lebih robust dan fleksibel dalam memberikan rekomendasi ponsel. Content-Based Filtering sangat efektif dalam menyajikan rekomendasi berdasarkan kesamaan fitur produk, seperti model, brand, dan sistem operasi, sehingga cocok untuk pengguna baru atau produk baru tanpa data interaksi. Sementara itu, Collaborative Filtering unggul dalam mengidentifikasi pola preferensi pengguna berdasarkan data interaksi rating, memungkinkan sistem memberikan rekomendasi yang bersifat personal dan relevan secara dinamis. Memahami kelebihan dan keterbatasan masing-masing metode memungkinkan pemilihan dan pengembangan solusi yang paling tepat sesuai dengan kebutuhan dan konteks spesifik sistem rekomendasi. Pendekatan kombinasi ini meningkatkan kualitas rekomendasi, memperkaya pengalaman pengguna, dan mendukung pengambilan keputusan yang lebih tepat dalam memilih ponsel.
+Dengan menggabungkan dua pendekatan utama, yaitu Content-Based Filtering dan Collaborative Filtering, sistem rekomendasi yang dibangun menjadi lebih robust dan fleksibel dalam memberikan rekomendasi ponsel. Content-Based Filtering sangat efektif dalam menyajikan rekomendasi berdasarkan kesamaan fitur produk, seperti model, brand, dan sistem operasi, sehingga cocok untuk pengguna baru atau produk baru tanpa data interaksi. Sementara itu, Collaborative Filtering unggul dalam mengidentifikasi pola preferensi pengguna berdasarkan data interaksi rating, memungkinkan sistem memberikan rekomendasi yang bersifat personal dan relevan secara dinamis. Memahami kelebihan dan keterbatasan masing-masing metode memungkinkan pemilihan dan pengembangan solusi yang paling tepat sesuai dengan kebutuhan dan konteks spesifik sistem rekomendasi. Pendekatan kombinasi ini meningkatkan kualitas rekomendasi, memperkaya pengalaman pengguna, dan mendukung pengambilan keputusan yang lebih tepat dalam memilih ponsel.
 
 ### Insight
 
-    Dengan memanfaatkan model sistem rekomendasi berbasis Content-Based Filtering dan Collaborative Filtering, proses pemilihan ponsel dapat dilakukan secara lebih akurat dan personal sesuai preferensi pengguna. Analisis fitur produk serta pola interaksi pengguna memungkinkan rekomendasi yang relevan dan tepat sasaran, membantu pengguna dalam menemukan ponsel yang sesuai dengan kebutuhan dan kebiasaan mereka. Penerapan pendekatan ini tidak hanya meningkatkan pengalaman pengguna, tetapi juga memberikan nilai strategis bagi pengembang dan pemasar dalam memahami preferensi konsumen dan menyesuaikan penawaran produk secara lebih efektif. Hasil ini menunjukkan bahwa teknologi kecerdasan buatan berperan penting dalam mengoptimalkan proses rekomendasi dan pengambilan keputusan di era digital.
+Dengan memanfaatkan model sistem rekomendasi berbasis Content-Based Filtering dan Collaborative Filtering, proses pemilihan ponsel dapat dilakukan secara lebih akurat dan personal sesuai preferensi pengguna. Analisis fitur produk serta pola interaksi pengguna memungkinkan rekomendasi yang relevan dan tepat sasaran, membantu pengguna dalam menemukan ponsel yang sesuai dengan kebutuhan dan kebiasaan mereka. Penerapan pendekatan ini tidak hanya meningkatkan pengalaman pengguna, tetapi juga memberikan nilai strategis bagi pengembang dan pemasar dalam memahami preferensi konsumen dan menyesuaikan penawaran produk secara lebih efektif. Hasil ini menunjukkan bahwa teknologi kecerdasan buatan berperan penting dalam mengoptimalkan proses rekomendasi dan pengambilan keputusan di era digital.
 
 
 ## Referensi
