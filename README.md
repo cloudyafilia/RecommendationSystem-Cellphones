@@ -248,10 +248,12 @@ Pada tahap ini, dua pendekatan utama yang digunakan untuk membangun sistem rekom
 Content-Based Filtering berfokus pada atribut atau fitur dari item itu sendiri, dalam hal ini fitur ponsel seperti merek (brand), model, dan sistem operasi. Metode ini membangun profil item dengan mengubah data teks menjadi representasi numerik menggunakan teknik TF-IDF Vectorizer, yang mengukur pentingnya sebuah kata atau fitur dalam konteks data. Setelah itu, dilakukan perhitungan cosine similarity antar item untuk menentukan tingkat kemiripan setiap ponsel dengan ponsel yang sudah disukai pengguna. Hasilnya adalah daftar rekomendasi ponsel yang paling mirip dengan ponsel yang telah digunakan atau disukai oleh pengguna.
 
 **Parameter dan teknik utama pada CBF**:
+
 1. TF-IDF Vectorizer: Digunakan untuk mengubah data teks (misalnya kolom brand) menjadi representasi numerik dalam bentuk matriks sparse, di mana setiap fitur diberi bobot berdasarkan frekuensi dan pentingnya dalam data. Ini memungkinkan penghitungan kesamaan antar item.
 2. Cosine Similarity: Metode yang digunakan untuk mengukur kemiripan antar vektor fitur. Nilai cosine similarity berkisar antara 0 sampai 1, di mana 1 berarti dua item sangat mirip.
 
 **Tahapan proses CBF**:
+
 1. Pemilihan Pemilihan Fitur
    Karena TF-IDF bekerja optimal pada data teks, hanya kolom bertipe object seperti brand, model, dan operating_system yang dipilih.
 2. Pembuatan DataFrame
@@ -282,7 +284,7 @@ Content-Based Filtering berfokus pada atribut atau fitur dari item itu sendiri, 
 
 Algoritma CBF mengubah fitur deskriptif setiap ponsel menjadi representasi numerik yang memudahkan penghitungan kemiripan antar produk. Saat pengguna memasukkan nama model ponsel, sistem menghitung kemiripan cosine antara ponsel tersebut dengan semua ponsel lain di dataset, kemudian merekomendasikan produk yang memiliki similarity tertinggi.
 
-**Contoh Interaksi**:
+**Contoh Interaksi CBF**:
 
 Jika pengguna memilih ponsel "Galaxy A13", algoritma akan:
 1. Mengambil profil teks "Galaxy A13".
@@ -338,14 +340,14 @@ Pendekatan Collaborative Filtering memanfaatkan data interaksi pengguna dengan i
 
 Model mempelajari pola rating antar pengguna dan item, sehingga dapat memprediksi rating untuk item baru bagi pengguna tertentu. Ini memungkinkan rekomendasi produk yang sesuai dengan preferensi pengguna meskipun produk tersebut tidak mirip secara fitur dengan yang sudah pernah dipilih.
 
-**Contoh Interaksi**:
+**Contoh Interaksi CF**:
 
 Misalnya, pengguna dengan ID 106 ingin rekomendasi:
 1. Model mencari pengguna lain dengan pola rating serupa.
 2. Memperkirakan rating pengguna 106 terhadap ponsel yang belum diulas.
 3. Mengembalikan daftar ponsel dengan prediksi rating tertinggi sebagai rekomendasi. 
 
-**Contoh Output Top-N Recommendation untuk CBF**:
+**Contoh Output Top-N Recommendation untuk CF**:
 
 ![image](https://github.com/user-attachments/assets/9be5f808-d8ed-4be3-a225-f5856885719d)
   
@@ -388,6 +390,12 @@ F1@N = 2 \times \frac{Precision@N \times Recall@N}{Precision@N + Recall@N}
 $$
 
 **Hasil Evaluasi Model**:
+
+| Metrik     | Nilai |
+|------------|--------|
+| Precision@5| 1.00   |
+| Recall@5   | 1.00   |
+| F1@5       | 1.00   |
 
 Model Content-Based Filtering menunjukkan performa sempurna dengan nilai Precision@5, Recall@5, dan F1@5 sebesar 1.00. Hal ini menandakan bahwa semua rekomendasi dalam daftar top-5 benar-benar relevan dengan preferensi pengguna, serta seluruh item relevan berhasil tertangkap oleh sistem. Dengan kata lain, sistem mampu memberikan rekomendasi yang sangat akurat dan lengkap berdasarkan fitur produk.
 
