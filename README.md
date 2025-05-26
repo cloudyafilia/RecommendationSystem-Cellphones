@@ -450,7 +450,7 @@ Dengan memanfaatkan model sistem rekomendasi berbasis Content-Based Filtering da
 ## Referensi
 - Dataset: [Cellphone Recommendations - Kaggle](https://www.kaggle.com/datasets/meirnizri/cellphones-recommendations)
 
--Bączkiewicz, A., Kizielewicz, B., Shekhovtsov, A., Wątróbski, J., & Sałabun, W. (2021). Methodical aspects of MCDM based E-commerce recommender system. Journal of Theoretical and Applied Electronic Commerce Research, 16(6), 2192-2229.
+- Bączkiewicz, A., Kizielewicz, B., Shekhovtsov, A., Wątróbski, J., & Sałabun, W. (2021). Methodical aspects of MCDM based E-commerce recommender system. Journal of Theoretical and Applied Electronic Commerce Research, 16(6), 2192-2229.
 - Kim, T. Y., Ko, H., Kim, S. H., & Kim, H. D. (2021). Modeling of recommendation system based on emotional information and collaborative filtering. Sensors, 21(6), 1997.
 - Khusna, A. N., Delasano, K. P., & Saputra, D. C. E. (2021). Penerapan User-Based Collaborative Filtering Algorithm. MATRIK: Jurnal Manajemen, Teknik Informatika dan Rekayasa Komputer, 20(2), 293-304.
 - Singh, P., Gupta, M., Kumar, A., Sikdar, P., & Sinha, N. (2021). E-Grocery retailing mobile application: Discerning determinants of repatronage intentions in an emerging economy. International Journal of Human–Computer Interaction, 37(19), 1783-1798.
