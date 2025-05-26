@@ -234,11 +234,11 @@ Analisis eksploratif dilakukan untuk memahami distribusi data dan hubungan antar
 
 ### Hasil Splitting Data
 
-    | Kategori        | Jumlah Data |
-    |-----------------|-------------|
-    | Seluruh Dataset | 989         |
-    | Data Training   | 791         |
-    | Data Testing    | 198         |
+| Kategori        | Jumlah Data |
+|-----------------|-------------|
+| Seluruh Dataset | 989         |
+| Data Training   | 791         |
+| Data Testing    | 198         |
 
 ## Modeling
 
@@ -247,32 +247,30 @@ Pada tahap ini, dua pendekatan utama yang digunakan untuk membangun sistem rekom
 ### Content-Based Filtering (CBF)
 Content-Based Filtering berfokus pada atribut atau fitur dari item itu sendiri, dalam hal ini fitur ponsel seperti merek (brand), model, dan sistem operasi. Metode ini membangun profil item dengan mengubah data teks menjadi representasi numerik menggunakan teknik TF-IDF Vectorizer, yang mengukur pentingnya sebuah kata atau fitur dalam konteks data. Setelah itu, dilakukan perhitungan cosine similarity antar item untuk menentukan tingkat kemiripan setiap ponsel dengan ponsel yang sudah disukai pengguna. Hasilnya adalah daftar rekomendasi ponsel yang paling mirip dengan ponsel yang telah digunakan atau disukai oleh pengguna.
 
--  **Parameter dan teknik utama pada CBF**:
+**Parameter dan teknik utama pada CBF**:
 1. TF-IDF Vectorizer: Digunakan untuk mengubah data teks (misalnya kolom brand) menjadi representasi numerik dalam bentuk matriks sparse, di mana setiap fitur diberi bobot berdasarkan frekuensi dan pentingnya dalam data. Ini memungkinkan penghitungan kesamaan antar item.
 2. Cosine Similarity: Metode yang digunakan untuk mengukur kemiripan antar vektor fitur. Nilai cosine similarity berkisar antara 0 sampai 1, di mana 1 berarti dua item sangat mirip.
 
-- **Tahapan proses CBF**:
+**Tahapan proses CBF**:
 1. Pemilihan Pemilihan Fitur
    Karena TF-IDF bekerja optimal pada data teks, hanya kolom bertipe object seperti brand, model, dan operating_system yang dipilih.
 2. Pembuatan DataFrame
    Membuat DataFrame baru yang berisi kolom-kolom tersebut untuk diproses.
        
-       ```python
-       phone_new = pd.DataFrame({
-        'cellphone_id': cellphone_id,
-        'brand': brand,
-        'model': model,
-        'operating_system': operating_system,
-        })
-       ```
-   
+   ```python
+   phone_new = pd.DataFrame({
+   'cellphone_id': cellphone_id,
+   'brand': brand,
+   'model': model,
+   'operating_system': operating_system,
+   })
+   ```
 3. Transformasi Data dengan TF-IDF
    Membangun TF-IDF matrix dari kolom brand (atau fitur lain yang relevan):
         
-        ```python
-        tfidf_matrix = tf.fit_transform(phone_new['brand'])
-        ```
-        
+    ```python
+    tfidf_matrix = tf.fit_transform(phone_new['brand'])
+    ```  
    Output berupa matriks ukuran (33,10) yaitu `jumlah_data` dan `jumlah_unique_brand`.
 
 4.  Menghitung Kemiripan
@@ -280,11 +278,11 @@ Content-Based Filtering berfokus pada atribut atau fitur dari item itu sendiri, 
 5.  Evaluasi dan membangun Fungsi Rekomendasi
     Membuat fungsi yang menerima nama model ponsel dan mengembalikan 4 rekomendasi teratas yang paling mirip, beserta detail brand dan operating system.
 
-- **Cara kerja algoritma CBF**:
+**Cara kerja algoritma CBF**:
 
 Algoritma CBF mengubah fitur deskriptif setiap ponsel menjadi representasi numerik yang memudahkan penghitungan kemiripan antar produk. Saat pengguna memasukkan nama model ponsel, sistem menghitung kemiripan cosine antara ponsel tersebut dengan semua ponsel lain di dataset, kemudian merekomendasikan produk yang memiliki similarity tertinggi.
 
-- **Contoh Interaksi**:
+**Contoh Interaksi**:
 
 Jika pengguna memilih ponsel "Galaxy A13", algoritma akan:
 1. Mengambil profil teks "Galaxy A13".
@@ -292,25 +290,25 @@ Jika pengguna memilih ponsel "Galaxy A13", algoritma akan:
 3. Menghitung cosine similarity dengan seluruh ponsel lain.
 4. Mengembalikan daftar ponsel dengan similarity tertinggi seperti "Galaxy Z Flip 3", "Galaxy S22 Plus", dan lain-lain.
 
-- **Contoh Output Top-N Recommendation untuk CBF**:
+**Contoh Output Top-N Recommendation untuk CBF**:
 
-    ```python
-    model_recommendations('Galaxy A13')
-    ```
-    
-    |   | model          | brand   | operating_system |
-    |---|----------------|---------|------------------|
-    | 0 | Galaxy Z Flip 3| Samsung | Android          |
-    | 1 | Galaxy S22 Plus| Samsung | Android          |
-    | 2 | Galaxy Z Fold 3| Samsung | Android          |
-    | 3 | Galaxy A32     | Samsung | Android          |
+```python
+model_recommendations('Galaxy A13')
+```
+
+|   | model          | brand   | operating_system |
+|---|----------------|---------|------------------|
+| 0 | Galaxy Z Flip 3| Samsung | Android          |
+| 1 | Galaxy S22 Plus| Samsung | Android          |
+| 2 | Galaxy Z Fold 3| Samsung | Android          |
+| 3 | Galaxy A32     | Samsung | Android          |
 
 
 ### Collaborative Filtering (CF)
 
 Pendekatan Collaborative Filtering memanfaatkan data interaksi pengguna dengan item, seperti rating yang diberikan pengguna terhadap ponsel. Metode ini tidak bergantung pada fitur produk, melainkan mencari pola kesamaan preferensi antar pengguna atau antar item berdasarkan data interaksi. Pada proyek ini, digunakan model neural network dengan arsitektur embedding untuk mempelajari representasi laten pengguna dan item. Model dilatih dengan loss function Binary Crossentropy dan optimizer Adam, serta dimonitor menggunakan metrik Root Mean Squared Error (RMSE).
 
-- **Parameter dan teknik utama pada CF**:
+**Parameter dan teknik utama pada CF**:
 1. Model Neural Network dengan Embedding
    Dibangun menggunakan kelas RecommenderNet berbasis Keras Model.
    a) Embedding layer untuk user dan item dengan dimensi embedding 50.
@@ -322,7 +320,7 @@ Pendekatan Collaborative Filtering memanfaatkan data interaksi pengguna dengan i
 4. Metrics: Root Mean Squared Error (RMSE)
    Sebagai metrik untuk memantau performa model.
 
-- **Tahapan proses CF**:
+**Tahapan proses CF**:
 1. Persiapan Data
    Menggunakan dataframe rating yang berisi user_id, cellphone_id, dan rating.
 2. Membangun Model
@@ -332,18 +330,16 @@ Pendekatan Collaborative Filtering memanfaatkan data interaksi pengguna dengan i
 4. Evaluasi dan Prediksi
    Menggunakan model terlatih untuk memprediksi rating ponsel yang belum diulas oleh pengguna.
 
-- **Cara kerja algoritma CF**:
-
+**Cara kerja algoritma CF**:
 Model mempelajari pola rating antar pengguna dan item, sehingga dapat memprediksi rating untuk item baru bagi pengguna tertentu. Ini memungkinkan rekomendasi produk yang sesuai dengan preferensi pengguna meskipun produk tersebut tidak mirip secara fitur dengan yang sudah pernah dipilih.
 
-- **Contoh Interaksi**:
-
+**Contoh Interaksi**:
 Misalnya, pengguna dengan ID 106 ingin rekomendasi:
 1. Model mencari pengguna lain dengan pola rating serupa.
 2. Memperkirakan rating pengguna 106 terhadap ponsel yang belum diulas.
 3. Mengembalikan daftar ponsel dengan prediksi rating tertinggi sebagai rekomendasi. 
 
-- **Contoh Output Top-N Recommendation untuk CBF**:
+**Contoh Output Top-N Recommendation untuk CBF**:
 
 ![image](https://github.com/user-attachments/assets/9be5f808-d8ed-4be3-a225-f5856885719d)
   
