@@ -106,7 +106,8 @@ Analisis eksploratif dilakukan untuk memahami distribusi data dan hubungan antar
 
 3. **Distribusi `operating system`**
 
-    ![image](https://github.com/user-attachments/assets/7c23cde6-76ef-4aa0-97d4-c6da918951e3)
+   ![image](https://github.com/user-attachments/assets/7934a57c-6f21-4f75-8d6a-10ca492b39db)
+
     
     Berdasarkan visualisasi fitur sistem operasi, mayoritas pengguna dalam data menggunakan Android (81,8%), sementara sisanya menggunakan iOS (18,2%). Hal ini menunjukkan bahwa Android lebih banyak diminati atau lebih mudah diakses oleh pengguna dalam data yang dianalisis. Perbedaan ini juga bisa mencerminkan preferensi pasar, ketersediaan perangkat, atau faktor ekonomi yang memengaruhi pilihan sistem operasi.
 
@@ -124,7 +125,8 @@ Analisis eksploratif dilakukan untuk memahami distribusi data dan hubungan antar
 
 6. **Distribusi `performance`**
 
-    ![image](https://github.com/user-attachments/assets/77ae015a-c70a-4537-afd8-7b2afbb120b6)
+   ![image](https://github.com/user-attachments/assets/f885aefb-cb4b-4882-9b7c-504602982c0f)
+
     
     Berdasarkan visualisasi fitur performance, terlihat bahwa sebagian besar data (63,6%) memiliki nilai performa lebih tinggi dari rata-rata (6,22), sementara sisanya (36,4%) memiliki performa yang sama atau lebih rendah dari rata-rata tersebut. Hal ini mengindikasikan bahwa performa secara umum cenderung berada di atas nilai rata-rata, menunjukkan keberhasilan dalam mencapai tingkat performa yang lebih baik. Pola ini penting untuk dipahami agar dapat menargetkan peningkatan performa di area yang kurang dari rata-rata dan memaksimalkan potensi dari pengguna atau sistem yang dianalisis.
 
@@ -154,7 +156,7 @@ Analisis eksploratif dilakukan untuk memahami distribusi data dan hubungan antar
 
 11. **Distribusi `realease date`**
 
-    ![image](https://github.com/user-attachments/assets/78d2ad7d-b2ad-401e-aee1-53f6ba38b3fd)
+    ![image](https://github.com/user-attachments/assets/2c88c83c-38ac-4b59-a10f-0228d5e2d58c)
     
     Berdasarkan visualisasi fitur release year, hampir setengah dari jumlah penjualan terjadi pada tahun 2021 dan 2022, keduanya dengan porsi sekitar 48,5%. Sementara itu, penjualan pada tahun 2018 hanya sekitar 3%, menunjukkan bahwa volume penjualan jauh lebih kecil dibandingkan dua tahun terakhir tersebut. Pola ini mengindikasikan bahwa pertumbuhan penjualan pesat terjadi setelah 2018, dengan puncaknya sekitar 2021 dan 2022, kemungkinan menandakan peningkatan popularitas atau adopsi produk di periode tersebut.
 
@@ -313,17 +315,19 @@ Pendekatan Collaborative Filtering memanfaatkan data interaksi pengguna dengan i
 **Parameter dan teknik utama pada CF**:
 
 1. Model Neural Network dengan Embedding
-   Dibangun menggunakan kelas RecommenderNet berbasis Keras Model.
+   Dibangun menggunakan kelas RecommenderNet berbasis Keras Model, dengan:
    
-   - Embedding layer untuk user dan item dengan dimensi embedding 50.
-   - Output layer memprediksi rating menggunakan sigmoid activation.
+   - Embedding layer untuk user dan item dengan dimensi embedding 50: Dimensi 50 dipilih sebagai kompromi antara representasi fitur yang cukup kaya untuk menangkap pola preferensi dan efisiensi komputasi agar model tidak terlalu kompleks dan mudah dilatih.
+   - Output layer memprediksi rating menggunakan sigmoid activation: Sigmoid dipilih karena rating diperlakukan sebagai probabilitas atau skor antara 0 dan 1 yang perlu diprediksi, sehingga fungsi aktivasi ini cocok untuk output bernilai terbatas.
      
 2. Loss Function: Binary Crossentropy
-   Meminimalkan perbedaan prediksi rating dengan rating asli.
+   Binary Crossentropy dipilih untuk meminimalkan perbedaan antara rating aktual dan prediksi dalam bentuk probabilitas, sangat sesuai untuk tugas klasifikasi biner atau prediksi probabilistik dalam sistem rekomendasi.
+   
 3. Optimizer: Adam dengan learning rate 0.001
-   Optimasi parameter model selama training.
+   Adam digunakan karena kemampuannya menggabungkan kelebihan metode adaptive learning rate dan momentum, sehingga mempercepat konvergensi dan stabil saat training dengan learning rate 0.001 yang merupakan nilai umum efektif untuk memulai training.
+   
 4. Metrics: Root Mean Squared Error (RMSE)
-   Sebagai metrik untuk memantau performa model.
+   RMSE dipilih sebagai metrik utama karena memberikan ukuran deviasi prediksi dalam satuan yang sama dengan rating asli, memudahkan interpretasi performa model dalam hal akurasi prediksi rating.
 
 **Tahapan proses CF**:
 
@@ -332,7 +336,7 @@ Pendekatan Collaborative Filtering memanfaatkan data interaksi pengguna dengan i
 2. Membangun Model
    Membuat kelas model dengan embedding untuk user dan item.
 3. Training Model
-   Melatih model dengan batch size 8 selama 100 epoch.
+   Melatih model dengan batch size 8 selama 100 epoch. Batch size 8 dipilih untuk mempercepat pembaruan parameter dengan memori yang efisien, sedangkan 100 epoch memberikan cukup kesempatan model belajar pola data secara menyeluruh.
 4. Evaluasi dan Prediksi
    Menggunakan model terlatih untuk memprediksi rating ponsel yang belum diulas oleh pengguna.
 
@@ -349,8 +353,8 @@ Misalnya, pengguna dengan ID 106 ingin rekomendasi:
 
 **Contoh Output Top-N Recommendation untuk CF**:
 
-![image](https://github.com/user-attachments/assets/9be5f808-d8ed-4be3-a225-f5856885719d)
-  
+![image](https://github.com/user-attachments/assets/9a5b6f34-98c1-40bb-9ee5-1623448aa8e2)
+
 
 ### Perbandingan masing-masing pendekatan:
 
@@ -416,15 +420,15 @@ di mana:
 
 **Hasil Evaluasi Model**:
 
-![image](https://github.com/user-attachments/assets/ed83a841-f671-45f5-8b14-be790bebcec5)
+![image](https://github.com/user-attachments/assets/41188c48-28f9-4792-9cae-dda98393b2cf)
 
 
 | Dataset       | RMSE  |
 |---------------|-------|
-| Data Train    | 0.0126|
-| Data Test     | 0.3110|
+| Data Train    | 0.0128|
+| Data Test     | 0.2925|
 
-Grafik model metrics menunjukkan bahwa nilai root mean squared error (RMSE) pada data training menurun drastis hingga mencapai sekitar 0.013, menandakan model berhasil belajar dengan sangat baik pada data pelatihan. Namun, nilai RMSE pada data testing stabil di angka sekitar 0.31 dan cenderung meningkat sedikit setelah epoch ke-10, yang mengindikasikan adanya overfitting, di mana model terlalu menyesuaikan diri dengan data training sehingga kehilangan kemampuan generalisasi terhadap data baru. Meski demikian, nilai RMSE test sebesar 0.3110 masih tergolong rendah, menunjukkan bahwa model tetap mampu memberikan prediksi yang cukup akurat pada data testing meskipun performanya tidak sebaik pada data training.
+Grafik model metrics menunjukkan bahwa nilai root mean squared error (RMSE) pada data training menurun drastis hingga mencapai sekitar 0.0128, menandakan model berhasil belajar dengan sangat baik pada data pelatihan. Namun, nilai RMSE pada data testing stabil di angka sekitar 0.27 dan cenderung meningkat sedikit setelah epoch ke-10, yang mengindikasikan adanya overfitting, di mana model terlalu menyesuaikan diri dengan data training sehingga kehilangan kemampuan generalisasi terhadap data baru. Meski demikian, nilai RMSE test sebesar 0.2925 masih tergolong rendah, menunjukkan bahwa model tetap mampu memberikan prediksi yang cukup akurat pada data testing meskipun performanya tidak sebaik pada data training.
 
 ### Evaluation terhadap Business Understanding
 
