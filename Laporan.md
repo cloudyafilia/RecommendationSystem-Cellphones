@@ -33,15 +33,18 @@ Berdasarkan masalah dan tujuan di atas, maka dapat diterapkan solusi sebagai ber
 ## Data Understanding
 
 Dataset yang digunakan adalah dataset [Cellphones Recommendations](https://www.kaggle.com/datasets/meirnizri/cellphones-recommendations) yang diambil dari platform penyedia data Kaggle. File yang digunakan berekstensi `.csv`. Dataset terdiri dari tiga file:
-1. **Cellphones Data**: 33 baris dengan 32 kolom, berisi spesifikasi ponsel yang dapat dijelaskan sebagai berikut.
 
-    | index | cellphone_id | brand | model            | operating system | internal memory | RAM | performance | main camera | selfie camera | battery size | screen size | weight | price | release date |
-    |-------|--------------|-------|------------------|------------------|-----------------|-----|-------------|-------------|---------------|--------------|-------------|--------|-------|--------------|
-    | 0     | 0            | Apple | iPhone SE (2022) | iOS              | 128             | 4   | 7.23        | 12          | 7             | 2018         | 4.7         | 144    | 429   | 18/03/2022   |
-    | 1     | 1            | Apple | iPhone 13 Mini   | iOS              | 128             | 4   | 7.72        | 12          | 12            | 2438         | 5.4         | 141    | 699   | 24/09/2021   |
-    | 2     | 2            | Apple | iPhone 13        | iOS              | 128             | 4   | 7.75        | 12          | 12            | 3240         | 6.1         | 174    | 699   | 24/09/2021   |
-    | 3     | 3            | Apple | iPhone 13 Pro    | iOS              | 256             | 6   | 7.94        | 12          | 12            | 3065         | 6.1         | 204    | 999   | 24/09/2021   |
-    | 4     | 4            | Apple | iPhone 13 Pro Max| iOS              | 256             | 6   | 8.01        | 12          | 12            | 4352         | 6.7         | 240    | 1199  | 24/09/2021   |
+1. **Cellphones Data**: 33 baris dengan 14 kolom, mencakup merek, model, sistem operasi, kapasitas memori internal dan RAM, performa, kualitas kamera utama dan depan, ukuran baterai, ukuran layar, berat, harga, serta tanggal rilis. Mayoritas kolom bertipe numerik yang cocok untuk analisis kuantitatif seperti segmentasi pasar, prediksi harga, atau klasifikasi performa. Data ini sangat potensial untuk eksplorasi tren teknologi ponsel terbaru dan preferensi konsumen berdasarkan spesifikasi.
+
+
+    | cellphone_id | brand | model             | operating system | internal memory | RAM | performance | main camera | selfie camera | battery size | screen size | weight | price | release date |
+    |--------------|-------|-------------------|------------------|-----------------|-----|-------------|-------------|---------------|--------------|-------------|--------|-------|--------------|
+    | 0            | Apple | iPhone SE (2022)  | iOS              | 128             | 4   | 7.23        | 12          | 7             | 2018         | 4.7         | 144    | 429   | 18/03/2022   |
+    | 1            | Apple | iPhone 13 Mini    | iOS              | 128             | 4   | 7.72        | 12          | 12            | 2438         | 5.4         | 141    | 699   | 24/09/2021   |
+    | 2            | Apple | iPhone 13         | iOS              | 128             | 4   | 7.75        | 12          | 12            | 3240         | 6.1         | 174    | 699   | 24/09/2021   |
+    | 3            | Apple | iPhone 13 Pro     | iOS              | 256             | 6   | 7.94        | 12          | 12            | 3065         | 6.1         | 204    | 999   | 24/09/2021   |
+    | 4            | Apple | iPhone 13 Pro Max | iOS              | 256             | 6   | 8.01        | 12          | 12            | 4352         | 6.7         | 240    | 1199  | 24/09/2021   |
+
     
       - `cellphone_id`: ID unik untuk setiap model ponsel.
       - `brand`: Merek ponsel (misalnya, Apple, Samsung, dll).
@@ -58,37 +61,41 @@ Dataset yang digunakan adalah dataset [Cellphones Recommendations](https://www.k
       - `price`: Harga ponsel dalam dolar AS.
       - `release date`: Tanggal rilis ponsel.
 
-2. **Cellphones Rating**: 990 baris dengan 3 kolom, berisi rating pengguna terhadap ponsel yang dapat dijelaskan sebagai berikut.
+3. **Cellphones Rating**: 990 baris dengan 3 kolom yang merepresentasikan interaksi antara pengguna dan ponsel, dengan kolom `user_id`, `cellphone_id`, dan `rating`. Struktur ini cocok untuk membangun sistem rekomendasi berbasis collaborative filtering, di mana rekomendasi dapat dihasilkan dengan menganalisis pola rating antar pengguna yang memiliki preferensi serupa terhadap ponsel tertentu.
 
-    | index | user_id | cellphone_id | rating |
-    |-------|---------|--------------|--------|
-    | 0     | 0       | 30           | 1      |
-    | 1     | 0       | 5            | 3      |
-    | 2     | 0       | 10           | 9      |
-    | 3     | 0       | 9            | 3      |
-    | 4     | 0       | 23           | 2      |
+
+    | user_id | cellphone_id | rating |
+    |---------|--------------|--------|
+    | 0       | 30           | 1      |
+    | 0       | 5            | 3      |
+    | 0       | 10           | 9      |
+    | 0       | 9            | 3      |
+    | 0       | 23           | 2      |
+
     
       - `user_id`: ID unik untuk setiap pengguna.
       - `cellphone_id`: ID unik untuk setiap ponsel (mengacu pada cellphones_data).
       - `rating`: Nilai rating yang diberikan pengguna untuk ponsel tertentu (skala 1-10).
 
-3. **Cellphones Users**: 99 baris dengan 4 kolom, berisi data demografi pengguna yang dapat dijelaskan sebagai berikut.
+4. **Cellphones Users**: 99 baris dengan 4 kolom, berisi data demografi pengguna yang mencakup `user_id`, `usia`, `jenis kelamin`, dan `pekerjaan`. Fitur-fitur ini dapat dimanfaatkan dalam sistem rekomendasi berbasis content-based atau hybrid filtering, untuk mempersonalisasi rekomendasi ponsel berdasarkan karakteristik pengguna..
 
-    | index | user_id | age | gender | occupation       |
-    |-------|---------|-----|--------|------------------|
-    | 0     | 0       | 38  | Female | Data analyst     |
-    | 1     | 1       | 40  | Female | team worker in it|
-    | 2     | 6       | 55  | Female | IT               |
-    | 3     | 8       | 25  | Female | Manager          |
-    | 4     | 10      | 23  | Male   | worker           |
-    
+
+    | user_id | age | gender | occupation       |
+    |---------|-----|--------|------------------|
+    | 0       | 38  | Female | Data analyst     |
+    | 1       | 40  | Female | team worker in it|
+    | 6       | 55  | Female | IT               |
+    | 8       | 25  | Female | Manager          |
+    | 10      | 23  | Male   | worker           |
+
+
       - `user_id`: ID unik untuk setiap pengguna.
       - `age`: Usia pengguna.
       - `gender`: Jenis kelamin pengguna.
       - `occupation`: Pekerjaan pengguna.
 
 ## Exploratory Data Analysis (EDA)
-Analisis eksploratif dilakukan untuk memahami distribusi data dan hubungan antar fitur. Terdiri dari:
+Tahapan EDA (Exploratory Data Analysis) bertujuan untuk memahami karakteristik dataset restoran, mengidentifikasi pola, hubungan antar variabel, serta memvisualisasikan data guna memperoleh insight awal.
 
 ### Dataset "data"
 
@@ -121,7 +128,7 @@ Analisis eksploratif dilakukan untuk memahami distribusi data dan hubungan antar
 
     ![image](https://github.com/user-attachments/assets/55237d06-0c33-4e10-8f6c-12e3292f2162)
     
-    Berdaasarkan visualisasi distribusi jumlah RAM yang digunakan, dengan puncak penggunaan mencapai 8 GB, diikuti oleh 6 GB dan 12 GB yang memiliki jumlah yang sama. Penggunaan RAM yang paling rendah terjadi pada 4 GB dan 13 GB. Hal ini mengindikasikan bahwa sebagian besar kebutuhan memori berkisar di antara 6 hingga 8 GB, sedangkan penggunaan di luar rentang ini lebih jarang, mungkin menunjukkan preferensi terhadap kapasitas memori tertentu sesuai kebutuhan pengguna. Pemahaman pola ini penting untuk mengoptimalkan pengelolaan sumber daya yang sesuai dengan kebutuhan pengguna.
+    Berdasarkan visualisasi distribusi jumlah RAM yang digunakan, dengan puncak penggunaan mencapai 8 GB, diikuti oleh 4 GB dan 6 GB yang memiliki jumlah yang sama. Penggunaan RAM yang paling rendah terjadi pada 3 GB dan 12 GB. Hal ini mengindikasikan bahwa sebagian besar kebutuhan memori berkisar di antara 6 hingga 8 GB, sedangkan penggunaan di luar rentang ini lebih jarang, mungkin menunjukkan preferensi terhadap kapasitas memori tertentu sesuai kebutuhan pengguna. Pemahaman pola ini penting untuk mengoptimalkan pengelolaan sumber daya yang sesuai dengan kebutuhan pengguna.
 
 6. **Distribusi `performance`**
 
@@ -134,7 +141,7 @@ Analisis eksploratif dilakukan untuk memahami distribusi data dan hubungan antar
 
     ![image](https://github.com/user-attachments/assets/ab19ca64-6cad-49b8-9f41-6430ca43c880)
     
-    Berdasarkan visualisasi distribusi main camera, jumlah penggunaan utama kamera berkisar di angka 12 hingga 64, dengan frekuensi tertinggi tercatat pada 50 dan 64. Terdapat juga kategori dengan jumlah penggunaan yang lebih rendah, seperti 13 dan 108, yang menunjukkan variability dalam preferensi pengguna terhadap jumlah kamera utama. Pola ini mengindikasikan bahwa sebagian besar pengguna cenderung menggunakan sekitar 12 hingga 64 kamera utama, namun ada juga yang memiliki jumlah yang lebih rendah maupun lebih tinggi, menandakan adanya berbagai kebutuhan dan tingkat penggunaannya.
+    Berdasarkan visualisasi distribusi main camera, jumlah penggunaan utama kamera berkisar di angka 12 hingga 108, dengan frekuensi tertinggi tercatat pada 50 dan 64. Terdapat juga kategori dengan jumlah penggunaan yang lebih rendah, seperti 13, 48, dan 108, yang menunjukkan variability dalam preferensi pengguna terhadap jumlah kamera utama. Pola ini mengindikasikan bahwa sebagian besar pengguna cenderung menggunakan sekitar 12 hingga 108 kamera utama, namun ada juga yang memiliki jumlah yang lebih rendah maupun lebih tinggi, menandakan adanya berbagai kebutuhan dan tingkat penggunaannya.
 
 8. **Distribusi `battery size`**
 
@@ -166,19 +173,19 @@ Analisis eksploratif dilakukan untuk memahami distribusi data dan hubungan antar
 
     ![image](https://github.com/user-attachments/assets/77522076-3061-4ef6-aa62-b042aabfe63a)
     
-    Distribusi jumlah review untuk setiap pengguna menunjukkan bahwa mayoritas pengguna memberikan jumlah review yang konsisten sebanyak 10 kali. Pola ini mengindikasikan bahwa sebagian besar pengguna aktif dalam memberikan review secara reguler dan konsisten, sementara ada sedikit pengguna yang aktivitas reviewnya berbeda.
+    Distribusi jumlah review untuk setiap pengguna menunjukkan bahwa mayoritas pengguna memberikan jumlah review yang konsisten sebanyak 10 kali. Pola ini mengindikasikan bahwa sebagian besar pengguna aktif dalam memberikan review secara reguler dan konsisten.
 
 2. **Distribusi `cellphoneID`**
 
     ![image](https://github.com/user-attachments/assets/0956d4c3-aa06-4e92-a9ee-cd5f2459b676)
     
-    Distribusi jumlah review per `cellphone_id` menunjukkan variasi aktivitas pengguna dalam memberikan review. Sebagian besar `cellphone_id` memberikan antara 20 sampai 35 review, dengan puncak di sekitar 8 dan 14, yang menunjukkan bahwa sejumlah pengguna cukup aktif. Ada juga beberapa `cellphone_id` yang memiliki jumlah review lebih tinggi, mendekati 40, menandakan pengguna yang sangat aktif. Data ini mengindikasikan adanya variasi tingkat partisipasi pengguna dalam memberikan review, dengan sebagian besar menunjukkan tingkat aktivitas sedang hingga tinggi.
+    Distribusi jumlah review per `cellphone_id` menunjukkan variasi aktivitas pengguna dalam memberikan review. Sebagian besar `cellphone_id` memberikan antara 20 sampai 35 review, dengan puncak di sekitar 8 dan 15, yang menunjukkan bahwa sejumlah pengguna cukup aktif. Ada juga beberapa `cellphone_id` yang memiliki jumlah review lebih tinggi, mendekati 33, menandakan pengguna yang sangat aktif. Data ini mengindikasikan adanya variasi tingkat partisipasi pengguna dalam memberikan review, dengan sebagian besar menunjukkan tingkat aktivitas sedang hingga tinggi.
 
 3. **Distribusi `rating`**
 
     ![image](https://github.com/user-attachments/assets/8cc9a1cf-9bbe-469c-b1a4-078adaa98636)
     
-    Berdasarkan visualisasi distribusi rating, sebagian besar pengguna memberikan rating tinggi, terutama pada angka 8 dan 9, dengan frekuensi tertinggi di sekitar rating 8. Ini menunjukkan bahwa mayoritas pengguna cenderung memberikan penilaian positif terhadap produk atau layanan tersebut. Rating di bawah 5 sangat jarang, menandakan tingkat ketidakpuasan yang rendah. Namun, ada satu angka yang tidak relevan dan tampak sebagai outlier, yaitu angka 18. Rating 18 ini tidak sesuai dengan skala rating yang umum digunakan, sehingga kemungkinan merupakan data yang tidak valid atau kesalahan input dan perlu penanganan lebih lanjut.
+    Berdasarkan visualisasi distribusi rating, sebagian besar pengguna memberikan rating tinggi, terutama pada angka 7 dan 8, dengan frekuensi tertinggi di sekitar rating 8. Ini menunjukkan bahwa mayoritas pengguna cenderung memberikan penilaian positif terhadap produk atau layanan tersebut. Rating di bawah 5 sangat jarang, menandakan tingkat ketidakpuasan yang rendah. Namun, ada satu angka yang tidak relevan dan tampak sebagai outlier, yaitu angka 18. Rating 18 ini tidak sesuai dengan skala rating yang umum digunakan, sehingga kemungkinan merupakan data yang tidak valid atau kesalahan input dan perlu penanganan lebih lanjut.
 
 ### Dataset "users"
 
@@ -186,7 +193,7 @@ Analisis eksploratif dilakukan untuk memahami distribusi data dan hubungan antar
 
     ![image](https://github.com/user-attachments/assets/76ad9299-0648-486b-a6be-0a131d9795ab)
     
-    Berdasarkan visualisasi distribusi usia, menunjukkan bahwa sebagian besar responden berusia antara 21 dan 61 tahun, dengan puncak pada usia sekitar 23 dan 32 tahun. Frekuensi tertinggi terdapat pada usia 23 tahun, yang menunjukkan bahwa kelompok usia ini paling aktif dalam memberikan data atau respons. Selain itu, terdapat variasi yang cukup luas di seluruh rentang usia, mengindikasikan beragam peserta dari berbagai kelompok usia. Data ini menggambarkan bahwa berbagai kelompok usia berpartisipasi, dengan kecenderungan utama di kalangan muda dewasa.
+    Berdasarkan visualisasi distribusi usia, menunjukkan bahwa sebagian besar responden berusia antara 21 dan 61 tahun, dengan puncak pada usia sekitar 25 dan 32 tahun. Frekuensi tertinggi terdapat pada usia 25 tahun, yang menunjukkan bahwa kelompok usia ini paling aktif dalam memberikan data atau respons. Selain itu, terdapat variasi yang cukup luas di seluruh rentang usia, mengindikasikan beragam peserta dari berbagai kelompok usia. Data ini menggambarkan bahwa berbagai kelompok usia berpartisipasi, dengan kecenderungan utama di kalangan muda dewasa.
 
 2. **Distribusi `gender`**
 
@@ -201,11 +208,12 @@ Analisis eksploratif dilakukan untuk memahami distribusi data dan hubungan antar
     Data occupation pada pengguna menunjukkan keberagaman yang tinggi dengan total 45 jenis pekerjaan unik, mulai dari profesional teknis seperti 'software developer' dan 'technical engineer', hingga peran administratif dan layanan seperti 'team leader', 'accountant', dan 'sales'. Variasi ini menggambarkan profil pengguna yang beragam, mencakup berbagai sektor industri dan tingkat jabatan, yang dapat memengaruhi preferensi dan kebutuhan dalam memilih ponsel. 
 
 ## Data Preparation
+Proses ini meliputi penggabungan berbagai dataset yang relevan, seperti menggabungkan data rating dengan data pengguna dan data lainnya, agar mendapatkan satu dataset lengkap. Selain itu, perlu juga dilakukan pengecekan dan penanganan missing value, duplikat data, serta validasi konsistensi data agar hasil analisis menjadi akurat dan dapat diandalkan.
 
 ### Teknik Data Preparation
 
 1. **Penggabungan Dataset**
-    Data dari tiga sumber utama—data spesifikasi ponsel (cellphones data), data rating pengguna (cellphones rating), dan data demografi pengguna (cellphones users)—digabungkan menjadi satu dataframe terpadu untuk memudahkan analisis dan pemodelan.
+    Data dari tiga sumber utama, yaitu data spesifikasi ponsel (cellphones data), data rating pengguna (cellphones rating), dan data demografi pengguna (cellphones users) digabungkan menjadi satu dataframe terpadu untuk memudahkan analisis dan pemodelan.
 2. **Handling Missing Values**
     Nilai yang hilang (missing values) pada kolom-kolom penting, seperti kolom occupation, diidentifikasi dan dihapus agar tidak mempengaruhi kualitas model dan analisis.
 3. **Removing Outliers**
@@ -242,21 +250,21 @@ Analisis eksploratif dilakukan untuk memahami distribusi data dan hubungan antar
 | Data Training   | 791         |
 | Data Testing    | 198         |
 
-## Modeling
+## Model Development
 
 Pada tahap ini, dua pendekatan utama yang digunakan untuk membangun sistem rekomendasi ponsel dibahas secara mendalam, yaitu Content-Based Filtering dan Collaborative Filtering. Kedua metode ini dipilih karena masing-masing memiliki kekuatan dan kelemahan yang berbeda sehingga dapat memberikan rekomendasi yang relevan dari sisi konten produk maupun interaksi pengguna.
 
 ### Content-Based Filtering (CBF)
-Content-Based Filtering berfokus pada atribut atau fitur dari item itu sendiri, dalam hal ini fitur ponsel seperti merek (brand), model, dan sistem operasi. Metode ini membangun profil item dengan mengubah data teks menjadi representasi numerik menggunakan teknik TF-IDF Vectorizer, yang mengukur pentingnya sebuah kata atau fitur dalam konteks data. Setelah itu, dilakukan perhitungan cosine similarity antar item untuk menentukan tingkat kemiripan setiap ponsel dengan ponsel yang sudah disukai pengguna. Hasilnya adalah daftar rekomendasi ponsel yang paling mirip dengan ponsel yang telah digunakan atau disukai oleh pengguna.
+Content-Based Filtering berfokus pada atribut atau fitur dari item itu sendiri, dalam hal ini fitur ponsel seperti merek (brand), model, dan sistem operasi. Metode ini membangun profil item dengan mengubah data teks menjadi representasi numerik menggunakan teknik TF-IDF Vectorizer, yang mengukur pentingnya sebuah kata atau fitur dalam konteks data. Setelah itu, dilakukan perhitungan cosine similarity antar item untuk menentukan tingkat kemiripan setiap ponsel dengan ponsel yang sudah disukai pengguna. Hasilnya adalah daftar rekomendasi ponsel yang paling mirip dengan ponsel yang telah digunakan atau disukai oleh pengguna dengan top-N recommendation yang dipersonalisasi berdasarkan preferensi konten pengguna.
 
 **Parameter dan teknik utama pada CBF**:
 
-1. TF-IDF Vectorizer: Digunakan untuk mengubah data teks (misalnya kolom brand) menjadi representasi numerik dalam bentuk matriks sparse, di mana setiap fitur diberi bobot berdasarkan frekuensi dan pentingnya dalam data. Ini memungkinkan penghitungan kesamaan antar item.
+1. TF-IDF Vectorizer: Digunakan untuk mengubah data teks (misalnya kolom brand) menjadi representasi numerik dalam bentuk matriks sparse, di mana setiap fitur diberi bobot berdasarkan frekuensi dan pentingnya dalam data. Hal ini memungkinkan penghitungan kesamaan antar item.
 2. Cosine Similarity: Metode yang digunakan untuk mengukur kemiripan antar vektor fitur. Nilai cosine similarity berkisar antara 0 sampai 1, di mana 1 berarti dua item sangat mirip.
 
 **Tahapan proses CBF**:
 
-1. Pemilihan Pemilihan Fitur
+1. Pemilihan Fitur
    Karena TF-IDF bekerja optimal pada data teks, hanya kolom bertipe object seperti brand, model, dan operating_system yang dipilih.
 2. Pembuatan DataFrame
    Membuat DataFrame baru yang berisi kolom-kolom tersebut untuk diproses.
@@ -280,7 +288,7 @@ Content-Based Filtering berfokus pada atribut atau fitur dari item itu sendiri, 
 4.  Menghitung Kemiripan
     Menggunakan cosine similarity untuk menghitung derajat kemiripan antar ponsel berdasarkan matriks TF-IDF tersebut.
 5.  Evaluasi dan membangun Fungsi Rekomendasi
-    Membuat fungsi yang menerima nama model ponsel dan mengembalikan 4 rekomendasi teratas yang paling mirip, beserta detail brand dan operating system.
+    Membuat fungsi yang menerima nama model ponsel dan mengembalikan 4 rekomendasi teratas yang paling mirip, beserta detail brand dan operating system. Selain itu juga melakukan evaluasi, seperti menghitung presisi, recall, dan F1-Score untuk mengetahui performa model.
 
 **Cara kerja algoritma CBF**:
 
@@ -310,7 +318,7 @@ model_recommendations('Galaxy A13')
 
 ### Collaborative Filtering (CF)
 
-Pendekatan Collaborative Filtering memanfaatkan data interaksi pengguna dengan item, seperti rating yang diberikan pengguna terhadap ponsel. Metode ini tidak bergantung pada fitur produk, melainkan mencari pola kesamaan preferensi antar pengguna atau antar item berdasarkan data interaksi. Pada proyek ini, digunakan model neural network dengan arsitektur embedding untuk mempelajari representasi laten pengguna dan item. Model dilatih dengan loss function Binary Crossentropy dan optimizer Adam, serta dimonitor menggunakan metrik Root Mean Squared Error (RMSE).
+Pendekatan Collaborative Filtering memanfaatkan data interaksi pengguna dengan item, seperti rating yang diberikan pengguna terhadap ponsel. Metode ini tidak bergantung pada fitur produk, melainkan mencari pola kesamaan preferensi antar pengguna atau antar item berdasarkan data interaksi. Pada proyek ini, digunakan model neural network dengan arsitektur embedding untuk mempelajari representasi laten pengguna dan item. Model dilatih dengan loss function Binary Crossentropy dan optimizer Adam, serta dimonitor menggunakan metrik Root Mean Squared Error (RMSE). Hasilnya adalah top-N recommendation yang memanfaatkan pola kolektif untuk menyarankan item yang relevan, terutama efektif jika data interaksi pengguna cukup banyak.
 
 **Parameter dan teknik utama pada CF**:
 
@@ -428,7 +436,7 @@ di mana:
 | Data Train    | 0.0128|
 | Data Test     | 0.2925|
 
-Grafik model metrics menunjukkan bahwa nilai root mean squared error (RMSE) pada data training menurun drastis hingga mencapai sekitar 0.0128, menandakan model berhasil belajar dengan sangat baik pada data pelatihan. Namun, nilai RMSE pada data testing stabil di angka sekitar 0.27 dan cenderung meningkat sedikit setelah epoch ke-10, yang mengindikasikan adanya overfitting, di mana model terlalu menyesuaikan diri dengan data training sehingga kehilangan kemampuan generalisasi terhadap data baru. Meski demikian, nilai RMSE test sebesar 0.2925 masih tergolong rendah, menunjukkan bahwa model tetap mampu memberikan prediksi yang cukup akurat pada data testing meskipun performanya tidak sebaik pada data training.
+Grafik model metrics menunjukkan bahwa nilai root mean squared error (RMSE) pada data training menurun drastis hingga mencapai sekitar 0.0128, menandakan model berhasil belajar dengan sangat baik pada data pelatihan. Meski demikian, nilai RMSE test sebesar 0.2925 masih tergolong rendah, menunjukkan bahwa model tetap mampu memberikan prediksi yang cukup akurat pada data testing meskipun performanya tidak sebaik pada data training.
 
 ### Evaluation terhadap Business Understanding
 
