@@ -241,7 +241,7 @@ Proses ini meliputi penggabungan berbagai dataset yang relevan, seperti menggabu
 
 #### Proses Data Preparation | Collaborative Filtering
 
-1. Encoding menjadi format numerik dan mapping pada fitur `user_id` dan `cellphone_id` untuk keperluan model Collaborative Filtering berbasis embedding. Proses ini diperlukan agar model dapat mengolah data pengguna dan produk secara efisien.
+1. Encoding menjadi format numerik dan mapping pada fitur `user_id` dan `cellphone_id` untuk mengubah data menjadi format numerik yang sesuai agar dapat diproses oleh embedding layer dalam model neural network. Proses ini diperlukan agar model dapat mengolah data pengguna dan produk secara efisien.
 2. Melakukan konversi tipe data pada kolom `rating` menjadi tipe data `float32` untuk memastikan bahwa data dapat diproses dengan tepat dalam model machine learning. Normalisasi rating tidak dilakukan karena model dapat menangani nilai asli rating dengan baik dan agar hasil prediksi tetap mudah diinterpretasi dalam skala asli.
 3. Menghapus outlier pada kolom rating, seperti nilai di luar rentang valid, yaitu 18 agar data interaksi yang digunakan bersih dan valid.
 4. Melakukan randomize dataset menggunakan fungsi sample(frac=1, random_state=42) untuk memastikan distribusi data yang merata dan menghindari bias saat proses pembagian data menjadi training dan testing.
