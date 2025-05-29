@@ -242,10 +242,10 @@ Proses ini meliputi penggabungan berbagai dataset yang relevan, seperti menggabu
 #### Proses Data Preparation | Collaborative Filtering
 
 1. Encoding menjadi format numerik dan mapping pada fitur `user_id` dan `cellphone_id` untuk mengubah data menjadi format numerik yang sesuai agar dapat diproses oleh embedding layer dalam model neural network. Proses ini diperlukan agar model dapat mengolah data pengguna dan produk secara efisien.
-2. Melakukan konversi tipe data pada kolom `rating` menjadi tipe data `float32` untuk memastikan bahwa data dapat diproses dengan tepat dalam model machine learning. Normalisasi rating tidak dilakukan karena model dapat menangani nilai asli rating dengan baik dan agar hasil prediksi tetap mudah diinterpretasi dalam skala asli.
+2. Melakukan konversi tipe data pada kolom `rating` menjadi tipe data `float32` untuk memastikan bahwa data dapat diproses dengan tepat dalam model machine learning. 
 3. Menghapus outlier pada kolom rating, seperti nilai di luar rentang valid, yaitu 18 agar data interaksi yang digunakan bersih dan valid.
-4. Melakukan randomize dataset menggunakan fungsi sample(frac=1, random_state=42) untuk memastikan distribusi data yang merata dan menghindari bias saat proses pembagian data menjadi training dan testing.
-5. Melakukan mapping data user dan cellphone menjadi satu value agar dapat diproses oleh model embedding dalam Collaborative Filtering dengan efisien.
+4. Melakukan randomize dataset menggunakan fungsi sample(frac=1, random_state=42) untuk memastikan distribusi data yang merata dan menghindari bias saat proses pembagian data menjadi training dan testing. 
+5. Melakukan mapping data user dan cellphone menjadi satu value agar dapat diproses oleh model embedding dalam Collaborative Filtering dengan efisien. Selanjutnya, dilakukan normalisasi nilai rating menggunakan teknik min-max scaling agar rentang nilai rating berada dalam interval [0,1]. Normalisasi ini bertujuan untuk membantu model neural network agar proses pelatihan lebih stabil dan mempercepat konvergensi.
 6. Melakukan pembagian data menjadi data train sebanyak 791 baris (80%) dan data test sebanyak 198 baris (20%).
 
 ### Alasan Melakukan Data Preparation
@@ -346,14 +346,14 @@ Model mempelajari pola rating antar pengguna dan item, sehingga dapat memprediks
 
 **Contoh Interaksi CF**:
 
-Misalnya, pengguna dengan ID 37 ingin rekomendasi:
+Misalnya, pengguna dengan ID 242 ingin rekomendasi:
 1. Model mencari pengguna lain dengan pola rating serupa.
-2. Memperkirakan rating pengguna 37 terhadap ponsel yang belum diulas.
+2. Memperkirakan rating pengguna 242 terhadap ponsel yang belum diulas.
 3. Mengembalikan daftar ponsel dengan prediksi rating tertinggi sebagai rekomendasi. 
 
 **Contoh Output Top-N Recommendation untuk CF**:
 
-![image](https://github.com/user-attachments/assets/02c93dc8-40cb-4011-a155-ae910317f0d7)
+![image](https://github.com/user-attachments/assets/023332f9-6c05-452d-8e01-59b732ebce05)
 
 
 ### Perbandingan masing-masing pendekatan:
@@ -420,16 +420,16 @@ di mana:
 
 **Hasil Evaluasi Model**:
 
-![image](https://github.com/user-attachments/assets/f6b88ab5-c075-4d8e-983f-78004a62aeb4)
+![image](https://github.com/user-attachments/assets/86047859-de77-4ce1-abcd-801547685537)
 
 
 
 | Dataset       | RMSE  |
 |---------------|-------|
-| Data Train    | 0.0125|
-| Data Test     | 0.3169|
+| Data Train    | 0.0123|
+| Data Test     | 0.2833|
 
-Grafik model metrics menunjukkan bahwa nilai root mean squared error (RMSE) pada data training menurun drastis hingga mencapai sekitar 0.0125, menandakan model berhasil belajar dengan sangat baik pada data pelatihan. Meski demikian, nilai RMSE test sebesar 0.3169 masih tergolong rendah, menunjukkan bahwa model tetap mampu memberikan prediksi yang cukup akurat pada data testing meskipun performanya tidak sebaik pada data training.
+Grafik model metrics menunjukkan bahwa nilai root mean squared error (RMSE) pada data training menurun drastis hingga mencapai sekitar 0.0123, menandakan model berhasil belajar dengan sangat baik pada data pelatihan. Meski demikian, nilai RMSE test sebesar 0.2833 masih tergolong rendah, menunjukkan bahwa model tetap mampu memberikan prediksi yang cukup akurat pada data testing meskipun performanya tidak sebaik pada data training.
 
 ### Evaluation terhadap Business Understanding
 
