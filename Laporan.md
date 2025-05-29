@@ -214,24 +214,44 @@ Proses ini meliputi penggabungan berbagai dataset yang relevan, seperti menggabu
 
 1. **Penggabungan Dataset**
     Data dari tiga sumber utama, yaitu data spesifikasi ponsel (cellphones data), data rating pengguna (cellphones rating), dan data demografi pengguna (cellphones users) digabungkan menjadi satu dataframe terpadu untuk memudahkan analisis dan pemodelan.
-2. **Handling Missing Values**
+2. **Menghapus duplicate data**
+   Langkah penghapusan duplikat pada kolom cellphone_id dilakukan menggunakan fungsi drop_duplicates('cellphone_id') untuk memastikan hanya satu entri unik per produk digunakan dalam proses Content-Based Filtering. Hal ini penting agar perhitungan kemiripan antar item tidak terdistorsi oleh data duplikat.
+3. **Handling Missing Values**
     Nilai yang hilang (missing values) pada kolom-kolom penting, seperti kolom occupation, diidentifikasi dan dihapus agar tidak mempengaruhi kualitas model dan analisis.
-3. **Removing Outliers**
-    Data dengan nilai tidak wajar atau ekstrem (outliers) pada kolom tertentu, misalnya rating dengan nilai 18 (di luar skala normal) dan gender dengan nilai '-Select Gender-' yang tidak valid, dihapus untuk menjaga konsistensi dan meningkatkan akurasi model.
 4. **Mengubah Format Penulisan**
     Penulisan teks pada kolom kategorikal diubah menjadi format konsisten, seperti mengubah semua nilai pada kolom occupation menjadi huruf kecil (lowercase), agar data yang seharusnya sama tidak dianggap berbeda karena perbedaan format penulisan.
 5. **Mereplace Nilai yang Salah atau Tidak Konsisten**
     Beberapa nilai pada kolom occupation yang mengalami kesalahan penulisan atau inkonsistensi diperbaiki. Contohnya, 'Healthare' diperbaiki menjadi 'healthcare', dan singkatan 'it' diganti menjadi bentuk lengkap 'information technology'.
-6. **Pembagian Dataset (Train-Test Split)**
-    Dataset dibagi menjadi dua bagian: data training sebanyak 80% dan data testing sebanyak 20% untuk melatih model dan menguji performanya secara adil dan valid.
 
-### Proses Data Preparation
+#### Proses Data Preparation | Content-Based Filtering
 
-1. Menggabungkan dataset cellphones data, cellphones rating, dan cellphones users menjadi satu dataframe komprehensif.
-2. Menghapus semua baris yang memiliki nilai null pada kolom occupation untuk menjaga kualitas data pengguna.
-3. Menghapus baris yang mengandung nilai outlier, seperti rating yang bernilai 18 (di luar skala penilaian yang valid) dan nilai gender '-Select Gender-' yang merupakan placeholder, bukan data valid.
-4. Menstandardisasi nilai pada kolom occupation dengan mengubah seluruh teks menjadi lowercase agar nilai-nilai yang serupa tidak terduplikasi karena perbedaan kapitalisasi.
-5. Memperbaiki kesalahan penulisan dalam kolom occupation seperti mengubah 'Healthare' menjadi 'healthcare' dan mengganti singkatan 'it' menjadi 'information technology'.
+1. Menghapus data duplikat berdasarkan kolom `cellphone_id` untuk memastikan setiap item unik sebelum pemodelan Content-Based Filtering. Hal ini mencegah bias dan inkonsistensi data.
+2. Melakukan konversi data menjadi format list agar memudahkan proses transformasi dan pemrosesan selanjutnya dalam pembuatan matriks fitur.
+3. Membuat dictionary `phone_new` yang berisi fitur utama ponsel (`cellphone_id`, `brand`, `model`, `operating_system`) sebagai input untuk model Content-Based Filtering. Langkah ini memudahkan transformasi dan perhitungan kemiripan antar produk.
+
+ ```python
+   phone_new = pd.DataFrame({
+   'cellphone_id': cellphone_id,
+   'brand': brand,
+   'model': model,
+   'operating_system': operating_system,
+   })
+   ```
+
+4. Melakukan TF-IDF lalu fit dan transformasi ke bentuk matriks, karena TF-IDF bekerja optimal pada data teks, hanya kolom bertipe object seperti brand, model, dan operating_system yang dipilih.
+        
+    ```python
+    tfidf_matrix = tf.fit_transform(phone_new['brand'])
+    ```  
+   Output berupa matriks ukuran (33,10) yaitu `jumlah_data` dan `jumlah_unique_brand`.
+
+#### Proses Data Preparation | Collaborative Filtering
+
+1. Encoding menjadi format numerik dan mapping pada fitur `user_id` dan `cellphone_id` untuk keperluan model Collaborative Filtering berbasis embedding. Proses ini diperlukan agar model dapat mengolah data pengguna dan produk secara efisien.
+2. Melakukan konversi tipe data pada kolom `rating` menjadi tipe data `float32` untuk memastikan bahwa data dapat diproses dengan tepat dalam model machine learning. Normalisasi rating tidak dilakukan karena model dapat menangani nilai asli rating dengan baik dan agar hasil prediksi tetap mudah diinterpretasi dalam skala asli.
+3. Menghapus outlier pada kolom rating, seperti nilai di luar rentang valid, yaitu 18 agar data interaksi yang digunakan bersih dan valid.
+4. Melakukan randomize dataset menggunakan fungsi sample(frac=1, random_state=42) untuk memastikan distribusi data yang merata dan menghindari bias saat proses pembagian data menjadi training dan testing.
+5. Melakukan mapping data user dan cellphone menjadi satu value agar dapat diproses oleh model embedding dalam Collaborative Filtering dengan efisien.
 6. Melakukan pembagian data menjadi data train sebanyak 791 baris (80%) dan data test sebanyak 198 baris (20%).
 
 ### Alasan Melakukan Data Preparation
@@ -239,8 +259,9 @@ Proses ini meliputi penggabungan berbagai dataset yang relevan, seperti menggabu
 1. Handling Missing Values: Nilai yang hilang dapat menyebabkan bias atau error dalam analisis dan model, sehingga perlu diatasi agar data yang digunakan lengkap dan konsisten.
 2. Removing Outliers: Data ekstrim atau tidak valid dapat merusak akurasi model dan menghasilkan prediksi yang tidak realistis, sehingga penghapusan outlier membantu meningkatkan performa dan kestabilan model.
 3. Mengubah Format Penulisan: Konsistensi penulisan data kategorikal penting agar nilai yang sama tidak terpisah menjadi kategori berbeda, yang dapat memengaruhi analisis dan hasil pemodelan.
-4. Mereplace Value yang Salah: Memperbaiki kesalahan penulisan mencegah duplikasi kategori dan memastikan interpretasi data yang benar dan valid.
-5. Pembagian Dataset: Memisahkan data untuk pelatihan dan pengujian memungkinkan evaluasi model secara objektif terhadap data yang belum pernah dilihat, sehingga mengukur kemampuan generalisasi model.
+4. Memperbaiki Value yang Salah: Memperbaiki kesalahan penulisan mencegah duplikasi kategori dan memastikan interpretasi data yang benar dan valid.
+5. Pembagian Dataset: Memisahkan data untuk subset pelatihan dan pengujian memungkinkan evaluasi model secara objektif terhadap data yang belum pernah dilihat, sehingga mengukur kemampuan generalisasi model.
+6. Encoding dan Transformasi Data: Mengubah data kategorikal menjadi format numerik dan mengonversi tipe data numerik agar sesuai dengan kebutuhan algoritma, sehingga model dapat belajar secara efektif dan efisien.
 
 ### Hasil Splitting Data
 
@@ -255,40 +276,20 @@ Proses ini meliputi penggabungan berbagai dataset yang relevan, seperti menggabu
 Pada tahap ini, dua pendekatan utama yang digunakan untuk membangun sistem rekomendasi ponsel dibahas secara mendalam, yaitu Content-Based Filtering dan Collaborative Filtering. Kedua metode ini dipilih karena masing-masing memiliki kekuatan dan kelemahan yang berbeda sehingga dapat memberikan rekomendasi yang relevan dari sisi konten produk maupun interaksi pengguna.
 
 ### Content-Based Filtering (CBF)
-Content-Based Filtering berfokus pada atribut atau fitur dari item itu sendiri, dalam hal ini fitur ponsel seperti merek (brand), model, dan sistem operasi. Metode ini membangun profil item dengan mengubah data teks menjadi representasi numerik menggunakan teknik TF-IDF Vectorizer, yang mengukur pentingnya sebuah kata atau fitur dalam konteks data. Setelah itu, dilakukan perhitungan cosine similarity antar item untuk menentukan tingkat kemiripan setiap ponsel dengan ponsel yang sudah disukai pengguna. Hasilnya adalah daftar rekomendasi ponsel yang paling mirip dengan ponsel yang telah digunakan atau disukai oleh pengguna dengan top-N recommendation yang dipersonalisasi berdasarkan preferensi konten pengguna.
+Content-Based Filtering berfokus pada atribut atau fitur dari item itu sendiri, dalam hal ini fitur ponsel seperti merek (brand), model, dan sistem operasi. Metode ini memanfaatkan teknik TF-IDF Vectorizer sebagai bagian dari data preparation, yang mengukur pentingnya sebuah kata atau fitur dalam konteks data. Setelah itu, dilakukan perhitungan cosine similarity antar item untuk menentukan tingkat kemiripan setiap ponsel dengan ponsel yang sudah disukai pengguna. Hasilnya adalah daftar rekomendasi ponsel yang paling mirip dengan ponsel yang telah digunakan atau disukai oleh pengguna dengan top-N recommendation yang dipersonalisasi berdasarkan preferensi konten pengguna.
 
 **Parameter dan teknik utama pada CBF**:
 
-1. TF-IDF Vectorizer: Digunakan untuk mengubah data teks (misalnya kolom brand) menjadi representasi numerik dalam bentuk matriks sparse, di mana setiap fitur diberi bobot berdasarkan frekuensi dan pentingnya dalam data. Hal ini memungkinkan penghitungan kesamaan antar item.
-2. Cosine Similarity: Metode yang digunakan untuk mengukur kemiripan antar vektor fitur. Nilai cosine similarity berkisar antara 0 sampai 1, di mana 1 berarti dua item sangat mirip.
+1. TF-IDF Vectorizer: Metode ini dilakukan pada bagian Data Preparation untuk mengubah fitur teks menjadi matriks bobot numerik yang merefleksikan frekuensi dan kepentingan kata, memungkinkan penghitungan kemiripan antar item secara efektif.
+2. Cosine Similarity: Metode ini digunakan untuk mengukur kemiripan antar vektor fitur. Nilai cosine similarity berkisar antara 0 sampai 1, di mana 1 berarti dua item sangat mirip.
 
 **Tahapan proses CBF**:
 
-1. Pemilihan Fitur
-   Karena TF-IDF bekerja optimal pada data teks, hanya kolom bertipe object seperti brand, model, dan operating_system yang dipilih.
-2. Pembuatan DataFrame
-   Membuat DataFrame baru yang berisi kolom-kolom tersebut untuk diproses.
-       
-   ```python
-   phone_new = pd.DataFrame({
-   'cellphone_id': cellphone_id,
-   'brand': brand,
-   'model': model,
-   'operating_system': operating_system,
-   })
-   ```
-3. Transformasi Data dengan TF-IDF
-   Membangun TF-IDF matrix dari kolom brand (atau fitur lain yang relevan):
-        
-    ```python
-    tfidf_matrix = tf.fit_transform(phone_new['brand'])
-    ```  
-   Output berupa matriks ukuran (33,10) yaitu `jumlah_data` dan `jumlah_unique_brand`.
-
-4.  Menghitung Kemiripan
-    Menggunakan cosine similarity untuk menghitung derajat kemiripan antar ponsel berdasarkan matriks TF-IDF tersebut.
-5.  Evaluasi dan membangun Fungsi Rekomendasi
-    Membuat fungsi yang menerima nama model ponsel dan mengembalikan 4 rekomendasi teratas yang paling mirip, beserta detail brand dan operating system. Selain itu juga melakukan evaluasi, seperti menghitung presisi, recall, dan F1-Score untuk mengetahui performa model.
+1.  Membuat data frame fitur (phone_new) yang berisi kolom deskriptif yang digunakan (brand, model, operating system) pada bagian Data Preparation.
+2.  Melakukan transformasi fitur teks menjadi representasi numerik dengan TF-IDF Vectorizer pada bagian Data Preparation.
+3.  Menghitung kemiripan antar ponsel menggunakan cosine similarity.
+4.  Membuat fungsi rekomendasi yang menerima nama model ponsel dan mengembalikan rekomendasi 4 ponsel teratas beserta detail brand dan sistem operasi.
+5.  Melakukan evaluasi performa model dengan metrik precision, recall, dan F1-score.
 
 **Cara kerja algoritma CBF**:
 
@@ -318,7 +319,7 @@ model_recommendations('Galaxy A13')
 
 ### Collaborative Filtering (CF)
 
-Pendekatan Collaborative Filtering memanfaatkan data interaksi pengguna dengan item, seperti rating yang diberikan pengguna terhadap ponsel. Metode ini tidak bergantung pada fitur produk, melainkan mencari pola kesamaan preferensi antar pengguna atau antar item berdasarkan data interaksi. Pada proyek ini, digunakan model neural network dengan arsitektur embedding untuk mempelajari representasi laten pengguna dan item. Model dilatih dengan loss function Binary Crossentropy dan optimizer Adam, serta dimonitor menggunakan metrik Root Mean Squared Error (RMSE). Hasilnya adalah top-N recommendation yang memanfaatkan pola kolektif untuk menyarankan item yang relevan, terutama efektif jika data interaksi pengguna cukup banyak.
+Pendekatan Collaborative Filtering memanfaatkan data interaksi pengguna dengan item, seperti rating yang diberikan pengguna terhadap ponsel. Metode ini tidak bergantung pada fitur produk, melainkan mencari pola kesamaan preferensi antar pengguna atau antar item berdasarkan data interaksi. Dalam proyek ini, digunakan model neural network dengan embedding yang merepresentasikan pengguna dan item sebagai vektor berdimensi rendah, sehingga menangkap pola laten preferensi dengan efisien. Model dilatih dengan loss function Binary Crossentropy dan optimizer Adam, serta dimonitor menggunakan metrik Root Mean Squared Error (RMSE). Hasilnya adalah top-N recommendation yang memanfaatkan pola kolektif untuk menyarankan item yang relevan, terutama efektif jika data interaksi pengguna cukup banyak.
 
 **Parameter dan teknik utama pada CF**:
 
@@ -339,14 +340,12 @@ Pendekatan Collaborative Filtering memanfaatkan data interaksi pengguna dengan i
 
 **Tahapan proses CF**:
 
-1. Persiapan Data
-   Menggunakan dataframe rating yang berisi user_id, cellphone_id, dan rating.
+1. Melakukan encoding user_id dan cellphone_id menjadi indeks numerik.
 2. Membangun Model
-   Membuat kelas model dengan embedding untuk user dan item.
-3. Training Model
-   Melatih model dengan batch size 8 selama 100 epoch. Batch size 8 dipilih untuk mempercepat pembaruan parameter dengan memori yang efisien, sedangkan 100 epoch memberikan cukup kesempatan model belajar pola data secara menyeluruh.
-4. Evaluasi dan Prediksi
-   Menggunakan model terlatih untuk memprediksi rating ponsel yang belum diulas oleh pengguna.
+   Membuat kelas model neural network dengan embedding untuk user dan item.
+3. Training Model dengan batch size 8 selama 100 epoch. Batch size 8 dipilih untuk mempercepat pembaruan parameter dengan memori yang efisien, sedangkan 100 epoch memberikan cukup kesempatan model belajar pola data secara menyeluruh.
+4. Mengevaluasi model menggunakan RMSE untuk mengukur selisih prediksi pada data training dan testing.
+5. Menghasilkan rekomendasi top-N berdasarkan prediksi rating tertinggi untuk setiap pengguna.
 
 **Cara kerja algoritma CF**:
 
@@ -354,14 +353,14 @@ Model mempelajari pola rating antar pengguna dan item, sehingga dapat memprediks
 
 **Contoh Interaksi CF**:
 
-Misalnya, pengguna dengan ID 106 ingin rekomendasi:
+Misalnya, pengguna dengan ID 37 ingin rekomendasi:
 1. Model mencari pengguna lain dengan pola rating serupa.
-2. Memperkirakan rating pengguna 106 terhadap ponsel yang belum diulas.
+2. Memperkirakan rating pengguna 37 terhadap ponsel yang belum diulas.
 3. Mengembalikan daftar ponsel dengan prediksi rating tertinggi sebagai rekomendasi. 
 
 **Contoh Output Top-N Recommendation untuk CF**:
 
-![image](https://github.com/user-attachments/assets/9a5b6f34-98c1-40bb-9ee5-1623448aa8e2)
+![image](https://github.com/user-attachments/assets/02c93dc8-40cb-4011-a155-ae910317f0d7)
 
 
 ### Perbandingan masing-masing pendekatan:
@@ -428,15 +427,16 @@ di mana:
 
 **Hasil Evaluasi Model**:
 
-![image](https://github.com/user-attachments/assets/41188c48-28f9-4792-9cae-dda98393b2cf)
+![image](https://github.com/user-attachments/assets/f6b88ab5-c075-4d8e-983f-78004a62aeb4)
+
 
 
 | Dataset       | RMSE  |
 |---------------|-------|
-| Data Train    | 0.0128|
-| Data Test     | 0.2925|
+| Data Train    | 0.0125|
+| Data Test     | 0.3169|
 
-Grafik model metrics menunjukkan bahwa nilai root mean squared error (RMSE) pada data training menurun drastis hingga mencapai sekitar 0.0128, menandakan model berhasil belajar dengan sangat baik pada data pelatihan. Meski demikian, nilai RMSE test sebesar 0.2925 masih tergolong rendah, menunjukkan bahwa model tetap mampu memberikan prediksi yang cukup akurat pada data testing meskipun performanya tidak sebaik pada data training.
+Grafik model metrics menunjukkan bahwa nilai root mean squared error (RMSE) pada data training menurun drastis hingga mencapai sekitar 0.0125, menandakan model berhasil belajar dengan sangat baik pada data pelatihan. Meski demikian, nilai RMSE test sebesar 0.3169 masih tergolong rendah, menunjukkan bahwa model tetap mampu memberikan prediksi yang cukup akurat pada data testing meskipun performanya tidak sebaik pada data training.
 
 ### Evaluation terhadap Business Understanding
 
