@@ -213,14 +213,13 @@ Proses ini meliputi penggabungan berbagai dataset yang relevan, seperti menggabu
 ### Teknik Data Preparation
 
 1. **Penggabungan Dataset** : Data dari tiga sumber utama, yaitu data spesifikasi ponsel (cellphones data), data rating pengguna (cellphones rating), dan data demografi pengguna (cellphones users) digabungkan menjadi satu dataframe terpadu untuk memudahkan analisis dan pemodelan.
-2. **Menghapus duplicate data** : Langkah penghapusan duplikat pada kolom cellphone_id dilakukan menggunakan fungsi drop_duplicates('cellphone_id') untuk memastikan hanya satu entri unik per produk digunakan dalam proses Content-Based Filtering. Hal ini penting agar perhitungan kemiripan antar item tidak terdistorsi oleh data duplikat.
-3. **Handling Missing Values** : Nilai yang hilang (missing values) pada kolom-kolom penting, seperti kolom occupation, diidentifikasi dan dihapus agar tidak mempengaruhi kualitas model dan analisis.
-4. **Mengubah Format Penulisan** : Penulisan teks pada kolom kategorikal diubah menjadi format konsisten, seperti mengubah semua nilai pada kolom occupation menjadi huruf kecil (lowercase), agar data yang seharusnya sama tidak dianggap berbeda karena perbedaan format penulisan.
-5. **Mereplace Nilai yang Salah atau Tidak Konsisten** : Beberapa nilai pada kolom occupation yang mengalami kesalahan penulisan atau inkonsistensi diperbaiki. Contohnya, 'Healthare' diperbaiki menjadi 'healthcare', dan singkatan 'it' diganti menjadi bentuk lengkap 'information technology'.
+2. **Handling Missing Values** : Nilai yang hilang (missing values) pada kolom-kolom penting, seperti kolom occupation, diidentifikasi dan dihapus agar tidak mempengaruhi kualitas model dan analisis.
+3. **Mengubah Format Penulisan** : Penulisan teks pada kolom kategorikal diubah menjadi format konsisten, seperti mengubah semua nilai pada kolom occupation menjadi huruf kecil (lowercase), agar data yang seharusnya sama tidak dianggap berbeda karena perbedaan format penulisan.
+4. **Mereplace Nilai yang Salah atau Tidak Konsisten** : Beberapa nilai pada kolom occupation yang mengalami kesalahan penulisan atau inkonsistensi diperbaiki. Contohnya, 'Healthare' diperbaiki menjadi 'healthcare', dan singkatan 'it' diganti menjadi bentuk lengkap 'information technology'.
 
 #### Proses Data Preparation | Content-Based Filtering
 
-1. Menghapus data duplikat berdasarkan kolom `cellphone_id` untuk memastikan setiap item unik sebelum pemodelan Content-Based Filtering. Hal ini mencegah bias dan inkonsistensi data.
+1. Menghapus data duplikat berdasarkan kolom `cellphone_id` menggunakan fungsi drop_duplicates('cellphone_id') untuk memastikan hanya satu entri unik per produk digunakan dalam proses Content-Based Filtering. Hal ini penting agar perhitungan kemiripan antar item tidak terdistorsi oleh data duplikat.
 2. Melakukan konversi data menjadi format list agar memudahkan proses transformasi dan pemrosesan selanjutnya dalam pembuatan matriks fitur.
 3. Membuat dictionary `phone_new` yang berisi fitur utama ponsel (`cellphone_id`, `brand`, `model`, `operating_system`) sebagai input untuk model Content-Based Filtering. Langkah ini memudahkan transformasi dan perhitungan kemiripan antar produk.
 
