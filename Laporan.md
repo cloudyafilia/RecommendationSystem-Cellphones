@@ -212,16 +212,11 @@ Proses ini meliputi penggabungan berbagai dataset yang relevan, seperti menggabu
 
 ### Teknik Data Preparation
 
-1. **Penggabungan Dataset**
-    Data dari tiga sumber utama, yaitu data spesifikasi ponsel (cellphones data), data rating pengguna (cellphones rating), dan data demografi pengguna (cellphones users) digabungkan menjadi satu dataframe terpadu untuk memudahkan analisis dan pemodelan.
-2. **Menghapus duplicate data**
-   Langkah penghapusan duplikat pada kolom cellphone_id dilakukan menggunakan fungsi drop_duplicates('cellphone_id') untuk memastikan hanya satu entri unik per produk digunakan dalam proses Content-Based Filtering. Hal ini penting agar perhitungan kemiripan antar item tidak terdistorsi oleh data duplikat.
-3. **Handling Missing Values**
-    Nilai yang hilang (missing values) pada kolom-kolom penting, seperti kolom occupation, diidentifikasi dan dihapus agar tidak mempengaruhi kualitas model dan analisis.
-4. **Mengubah Format Penulisan**
-    Penulisan teks pada kolom kategorikal diubah menjadi format konsisten, seperti mengubah semua nilai pada kolom occupation menjadi huruf kecil (lowercase), agar data yang seharusnya sama tidak dianggap berbeda karena perbedaan format penulisan.
-5. **Mereplace Nilai yang Salah atau Tidak Konsisten**
-    Beberapa nilai pada kolom occupation yang mengalami kesalahan penulisan atau inkonsistensi diperbaiki. Contohnya, 'Healthare' diperbaiki menjadi 'healthcare', dan singkatan 'it' diganti menjadi bentuk lengkap 'information technology'.
+1. **Penggabungan Dataset** : Data dari tiga sumber utama, yaitu data spesifikasi ponsel (cellphones data), data rating pengguna (cellphones rating), dan data demografi pengguna (cellphones users) digabungkan menjadi satu dataframe terpadu untuk memudahkan analisis dan pemodelan.
+2. **Menghapus duplicate data** : Langkah penghapusan duplikat pada kolom cellphone_id dilakukan menggunakan fungsi drop_duplicates('cellphone_id') untuk memastikan hanya satu entri unik per produk digunakan dalam proses Content-Based Filtering. Hal ini penting agar perhitungan kemiripan antar item tidak terdistorsi oleh data duplikat.
+3. **Handling Missing Values** : Nilai yang hilang (missing values) pada kolom-kolom penting, seperti kolom occupation, diidentifikasi dan dihapus agar tidak mempengaruhi kualitas model dan analisis.
+4. **Mengubah Format Penulisan** : Penulisan teks pada kolom kategorikal diubah menjadi format konsisten, seperti mengubah semua nilai pada kolom occupation menjadi huruf kecil (lowercase), agar data yang seharusnya sama tidak dianggap berbeda karena perbedaan format penulisan.
+5. **Mereplace Nilai yang Salah atau Tidak Konsisten** : Beberapa nilai pada kolom occupation yang mengalami kesalahan penulisan atau inkonsistensi diperbaiki. Contohnya, 'Healthare' diperbaiki menjadi 'healthcare', dan singkatan 'it' diganti menjadi bentuk lengkap 'information technology'.
 
 #### Proses Data Preparation | Content-Based Filtering
 
@@ -256,12 +251,12 @@ Proses ini meliputi penggabungan berbagai dataset yang relevan, seperti menggabu
 
 ### Alasan Melakukan Data Preparation
 
-1. Handling Missing Values: Nilai yang hilang dapat menyebabkan bias atau error dalam analisis dan model, sehingga perlu diatasi agar data yang digunakan lengkap dan konsisten.
-2. Removing Outliers: Data ekstrim atau tidak valid dapat merusak akurasi model dan menghasilkan prediksi yang tidak realistis, sehingga penghapusan outlier membantu meningkatkan performa dan kestabilan model.
-3. Mengubah Format Penulisan: Konsistensi penulisan data kategorikal penting agar nilai yang sama tidak terpisah menjadi kategori berbeda, yang dapat memengaruhi analisis dan hasil pemodelan.
-4. Memperbaiki Value yang Salah: Memperbaiki kesalahan penulisan mencegah duplikasi kategori dan memastikan interpretasi data yang benar dan valid.
-5. Pembagian Dataset: Memisahkan data untuk subset pelatihan dan pengujian memungkinkan evaluasi model secara objektif terhadap data yang belum pernah dilihat, sehingga mengukur kemampuan generalisasi model.
-6. Encoding dan Transformasi Data: Mengubah data kategorikal menjadi format numerik dan mengonversi tipe data numerik agar sesuai dengan kebutuhan algoritma, sehingga model dapat belajar secara efektif dan efisien.
+1. **Handling Missing Values** : Nilai yang hilang dapat menyebabkan bias atau error dalam analisis dan model, sehingga perlu diatasi agar data yang digunakan lengkap dan konsisten.
+2. **Removing Outliers** : Data ekstrim atau tidak valid dapat merusak akurasi model dan menghasilkan prediksi yang tidak realistis, sehingga penghapusan outlier membantu meningkatkan performa dan kestabilan model.
+3. **Mengubah Format Penulisan** : Konsistensi penulisan data kategorikal penting agar nilai yang sama tidak terpisah menjadi kategori berbeda, yang dapat memengaruhi analisis dan hasil pemodelan.
+4. **Memperbaiki Value yang Salah** : Memperbaiki kesalahan penulisan mencegah duplikasi kategori dan memastikan interpretasi data yang benar dan valid.
+5. **Pembagian Dataset** : Memisahkan data untuk subset pelatihan dan pengujian memungkinkan evaluasi model secara objektif terhadap data yang belum pernah dilihat, sehingga mengukur kemampuan generalisasi model.
+6. **Encoding dan Transformasi Data** : Mengubah data kategorikal menjadi format numerik dan mengonversi tipe data numerik agar sesuai dengan kebutuhan algoritma, sehingga model dapat belajar secara efektif dan efisien.
 
 ### Hasil Splitting Data
 
@@ -340,9 +335,8 @@ Pendekatan Collaborative Filtering memanfaatkan data interaksi pengguna dengan i
 
 **Tahapan proses CF**:
 
-1. Melakukan encoding user_id dan cellphone_id menjadi indeks numerik.
-2. Membangun Model
-   Membuat kelas model neural network dengan embedding untuk user dan item.
+1. Melakukan encoding user_id dan cellphone_id menjadi indeks numerik pada bagian Data Preparation.
+2. Membangun Model dengan membuat kelas model neural network dengan embedding untuk user dan item.
 3. Training Model dengan batch size 8 selama 100 epoch. Batch size 8 dipilih untuk mempercepat pembaruan parameter dengan memori yang efisien, sedangkan 100 epoch memberikan cukup kesempatan model belajar pola data secara menyeluruh.
 4. Mengevaluasi model menggunakan RMSE untuk mengukur selisih prediksi pada data training dan testing.
 5. Menghasilkan rekomendasi top-N berdasarkan prediksi rating tertinggi untuk setiap pengguna.
